@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApexTrade — Affiliate Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --border: #1e1e1e;
+    --accent: #00ff88;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #555555;
+    --card: #131313;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);
+    background-size:50px 50px;
+    pointer-events:none;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* LOGIN */
+  .login-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-box::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .logo span { color: var(--text); }
+  .logo-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .input-group { margin-bottom: 20px; text-align: left; }
+  .input-group label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 8px;
+  }
+  .input-group input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 1px;
+  }
+  .input-group input:focus { border-color: rgba(0,255,136,0.4); }
+  .input-group input::placeholder { color: var(--muted); }
+
+  .check-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+  .check-btn:hover { background: #00cc6e; transform: translateY(-1px); }
+  .check-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .error-msg {
+    color: var(--accent2);
+    font-size: 13px;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* DASHBOARD */
+  .dashboard { display: none; }
+  .dashboard.show { display: block; }
+
+  .dash-header {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .dash-header::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .dash-logo { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--accent); }
+  .dash-logo span { color:var(--text); }
+  .live-dot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .live-dot::before {
+    content:'●';
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  .ref-info {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ref-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .ref-code-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .copy-link-btn {
+    background: rgba(0,255,136,0.1);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--accent);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s;
+  }
+  .copy-link-btn:hover { background: rgba(0,255,136,0.2); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: rgba(0,255,136,0.2); }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-num.green { color: var(--accent); }
+  .stat-num.orange { color: var(--accent2); }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .commission-card {
+    background: var(--card);
+    border: 1px solid rgba(0,255,136,0.15);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .commission-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: radial-gradient(ellipse at bottom, rgba(0,255,136,0.06), transparent);
+  }
+  .commission-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .commission-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .commission-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .payout-info {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .payout-icon { font-size: 24px; }
+  .payout-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .payout-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+  .logout-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 12px;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { border-color: var(--muted); color: var(--text); }
+
+  .loading {
+    text-align: center;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    display: none;
+  }
+  .loading.show { display: block; }
+
+  @media(max-width:420px) {
+    .login-box { padding: 32px 24px; }
+    .commission-amount { font-size: 56px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- LOGIN -->
+  <div class="login-box" id="loginBox">
+    <div class="logo">Apex<span>Trade</span></div>
+    <div class="logo-sub">Affiliate Dashboard</div>
+
+    <div class="input-group">
+      <label>Tumhara Referral Code</label>
+      <input type="text" id="refInput" placeholder="e.g. rahul" autocomplete="off" />
+    </div>
+
+    <button class="check-btn" id="checkBtn" onclick="checkStats()">
+      Dashboard Dekho →
+    </button>
+
+    <div class="loading" id="loading">Loading... ⏳</div>
+    <div class="error-msg" id="errorMsg">❌ Code nahi mila. Sahi code daalo.</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+
+    <div class="dash-header">
+      <div class="dash-logo">Apex<span>Trade</span></div>
+      <div class="live-dot">LIVE DATA</div>
+    </div>
+
+    <div class="ref-info">
+      <div>
+        <div class="ref-label">Your Ref Code</div>
+        <div class="ref-code-display" id="displayRef">—</div>
+      </div>
+      <button class="copy-link-btn" id="copyBtn" onclick="copyLink()">📋 Link Copy Karo</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num green" id="totalSales">0</div>
+        <div class="stat-label">Total Sales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num orange" id="perSale">₹210</div>
+        <div class="stat-label">Per Sale</div>
+      </div>
+    </div>
+
+    <div class="commission-card">
+      <div class="commission-label">Total Commission Earned</div>
+      <div class="commission-amount" id="totalCommission">₹0</div>
+      <div class="commission-sub">35% of ₹600 per sale</div>
+    </div>
+
+    <div class="payout-info">
+      <div class="payout-icon">💸</div>
+      <div class="payout-text">
+        <strong>Payout Schedule</strong>
+        Har mahine 1 tarikh ko UPI/Bank transfer hoga. Minimum ₹210 (1 sale).
+      </div>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">← Wapas Jao</button>
+  </div>
+
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjf1H96z28cQHZxR0DdH0Us80fylOf35BdWalLXTt2Owk5VkMNINCh-gtRenBVl6ZD/exec";
+  const WEBSITE_URL = "https://YOUR-GITHUB-USERNAME.github.io/YOUR-REPO"; // <-- Update this!
+
+  let currentRef = '';
+
+  async function checkStats() {
+    const ref = document.getElementById('refInput').value.trim().toLowerCase();
+    if (!ref) return;
+
+    document.getElementById('checkBtn').disabled = true;
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('errorMsg').classList.remove('show');
+
+    try {
+      const res = await fetch(`${SCRIPT_URL}?ref=${ref}`);
+      const data = await res.json();
+
+      // If ref exists in system (even 0 sales is valid if influencer registered)
+      // We show dashboard — you can add influencer validation later
+      currentRef = ref;
+      showDashboard(data);
+
+    } catch(err) {
+      document.getElementById('errorMsg').textContent = '❌ Network error. Dobara try karo.';
+      document.getElementById('errorMsg').classList.add('show');
+    }
+
+    document.getElementById('loading').classList.remove('show');
+    document.getElementById('checkBtn').disabled = false;
+  }
+
+  function showDashboard(data) {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('dashboard').classList.add('show');
+
+    document.getElementById('displayRef').textContent = data.ref || currentRef;
+    document.getElementById('totalSales').textContent = data.totalSales || 0;
+    document.getElementById('totalCommission').textContent = `₹${data.totalCommission || 0}`;
+  }
+
+  function copyLink() {
+    const link = `${WEBSITE_URL}?ref=${currentRef}`;
+    navigator.clipboard.writeText(link).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Link Copy Karo', 2000);
+    });
+  }
+
+  function logout() {
+    document.getElementById('loginBox').style.display = 'block';
+    document.getElementById('dashboard').classList.remove('show');
+    document.getElementById('refInput').value = '';
+    currentRef = '';
+  }
+
+  // Enter key support
+  document.getElementById('refInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkStats();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApexTrade Journal — Professional Trading Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222222;
+    --accent: #00ff88;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #666666;
+    --card-bg: #131313;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+  nav .container { display: flex; align-items: center; justify-content: space-between; }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+  .logo span { color: var(--text); }
+  .nav-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 100px 0 80px;
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 30px;
+    margin-bottom: 36px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero-tag::before { content: '●'; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 110px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+  }
+  .hero h1 .line2 { color: var(--accent); }
+  .hero h1 .line3 { color: var(--muted); font-size: 0.6em; }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 500; }
+
+  /* PRICE CARD */
+  .price-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 60px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .price-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .price-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .price-period {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .buy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 16px 48px;
+    border-radius: 12px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .buy-btn:hover {
+    background: #00cc6e;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,255,136,0.3);
+  }
+  .buy-btn::after { content: '→'; font-size: 18px; }
+
+  .ref-badge {
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.15);
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: none;
+  }
+  .ref-badge.show { display: block; }
+
+  /* FEATURES */
+  .features {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: rgba(0,255,136,0.3); }
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+  .feature-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .feature-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* STATS */
+  .stats {
+    padding: 60px 0;
+    border-top: 1px solid var(--border);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .stat-item {
+    background: var(--card-bg);
+    padding: 36px 28px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  footer p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer .accent { color: var(--accent); }
+
+  /* Ticker tape */
+  .ticker {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    overflow: hidden;
+    margin: 40px 0;
+  }
+  .ticker-inner {
+    display: flex;
+    gap: 48px;
+    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .ticker-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ticker-item span { color: var(--accent); }
+
+  @media(max-width:600px) {
+    .hero { padding: 60px 0 40px; }
+    .price-card { padding: 28px 28px; }
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo">Apex<span>Trade</span></div>
+    <div class="nav-badge">LIVE</div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">Professional Trading Journal</div>
+    <h1>
+      <div>TRACK YOUR</div>
+      <div class="line2">TRADES.</div>
+      <div class="line3">MASTER YOUR EDGE.</div>
+    </h1>
+    <p class="hero-sub">
+      India ka <strong>sabse powerful</strong> trading journal. Apne trades track karo, patterns dekho, aur consistent profitability achieve karo.
+    </p>
+
+    <div class="price-card">
+      <div class="price-label">One Time Payment</div>
+      <div class="price-amount">₹600</div>
+      <div class="price-period">Lifetime Access • No Subscription</div>
+      <a href="#" class="buy-btn" id="buyBtn">Abhi Kharido</a>
+      <div class="ref-badge" id="refBadge"></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<section class="features">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Advanced Analytics</h3>
+        <p>Win rate, RR ratio, max drawdown, streak analysis — sab kuch ek jagah. Apni trading patterns ko clearly dekho.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Trade Coach</h3>
+        <p>Har trade ke baad AI se feedback lo. Pattern recognition aur personalized improvement tips milenge.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>6 Color Themes</h3>
+        <p>Dark mode default. 6 beautiful themes mein se apna favorite choose karo — eyes ko comfortable rakho.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>PWA — Works Offline</h3>
+        <p>Phone pe install karo, offline bhi kaam karta hai. Market hours mein fast aur reliable.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>MT5 CSV Import</h3>
+        <p>XM Global aur doosre brokers ka CSV directly import karo. Manual entry ki zaroorat nahi.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Your Data, Your Control</h3>
+        <p>Koi cloud nahi, koi subscription nahi. Data tera hai — local storage mein safe rehta hai.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container">
+    <div class="section-label">Why It Works</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">6+</div>
+        <div class="stat-label">Color Themes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Trade Entries</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">₹600</div>
+        <div class="stat-label">One Time Only</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Made with ❤️ for <span class="accent">Indian Traders</span> &nbsp;•&nbsp; ApexTrade Journal &nbsp;•&nbsp; <span class="accent">Lifetime Access</span></p>
+  </div>
+</footer>
+
+<script>
+  // ============================================
+  // AFFILIATE REF TRACKING
+  // ============================================
+  const RAZORPAY_BASE = "https://rzp.io/rzp/J1AfH6ZY";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjf1H96z28cQHZxR0DdH0Us80fylOf35BdWalLXTt2Owk5VkMNINCh-gtRenBVl6ZD/exec";
+
+  function getRefCode() {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      localStorage.setItem('apextrade_ref', ref);
+      return ref;
+    }
+    return localStorage.getItem('apextrade_ref') || null;
+  }
+
+  function setupBuyButton() {
+    const ref = getRefCode();
+    const btn = document.getElementById('buyBtn');
+    const badge = document.getElementById('refBadge');
+
+    if (ref) {
+      // Pass ref as notes in Razorpay URL
+      btn.href = `${RAZORPAY_BASE}?notes[ref]=${ref}`;
+      badge.textContent = `🤝 Referred by: ${ref}`;
+      badge.classList.add('show');
+    } else {
+      btn.href = RAZORPAY_BASE;
+    }
+
+    btn.addEventListener('click', function(e) {
+      // Track click if ref exists
+      if (ref) {
+        console.log('Purchase initiated with ref:', ref);
+      }
+    });
+  }
+
+  // Ticker tape
+  function setupTicker() {
+    const items = [
+      'NIFTY 50', 'BANKNIFTY', 'GOLD', 'CRUDE OIL',
+      'EURUSD', 'XAUUSD', 'GBPINR', 'USDINR',
+      'RELIANCE', 'TCS', 'HDFC', 'INFY',
+      'WIN RATE ↑', 'DRAWDOWN ↓', 'RR 1:3', 'CONSISTENCY ✓'
+    ];
+    const ticker = document.getElementById('tickerInner');
+    // Double for seamless loop
+    const allItems = [...items, ...items, ...items, ...items];
+    ticker.innerHTML = allItems.map(i => 
+      `<div class="ticker-item"><span>●</span>${i}</div>`
+    ).join('');
+  }
+
+  setupBuyButton();
+  setupTicker();
+</script>
+
+</body>
+</html>
