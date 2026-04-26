@@ -220,6 +220,7 @@
     .buy-btn-big { padding:16px 32px; font-size:16px; }
   }
 </style>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
@@ -332,7 +333,7 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <a href="https://rzp.io/rzp/COUwBxv" class="buy-btn-big" id="buyBtnBig">🚀 Get Lifetime Access — ₹600</a>
+        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹1</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -478,12 +479,48 @@
 
   function setupBuyButton() {
     const ref = getRefCode();
-    const bigBtn = document.getElementById('buyBtnBig');
     const badge = document.getElementById('refBadge');
-    if (ref) {
-      if (bigBtn) bigBtn.href = `${RAZORPAY_BASE}?notes[ref]=${ref}`;
-      if (badge) { badge.textContent = `🤝 Referred by: ${ref}`; badge.classList.add('show'); }
+    if (ref && badge) {
+      badge.textContent = `🤝 Referred by: ${ref}`;
+      badge.classList.add('show');
     }
+  }
+
+  function openCheckout() {
+    const ref = getRefCode() || 'direct';
+    const options = {
+      key: 'rzp_test_Si3bXYg7S4MkqR',
+      amount: 100, // 1 rupee in paise (test)
+      currency: 'INR',
+      name: 'ApexTrade Journal',
+      description: 'Lifetime Access',
+      image: '',
+      handler: function(response) {
+        // Payment successful - send to Google Sheet
+        fetch('https://script.google.com/macros/s/AKfycbxjf1H96z28cQHZxR0DdH0Us80fylOf35BdWalLXTt2Owk5VkMNINCh-gtRenBVl6ZD/exec', {
+          method: 'POST',
+          body: JSON.stringify({
+            event: 'payment.captured',
+            payload: {
+              payment: {
+                entity: {
+                  id: response.razorpay_payment_id,
+                  amount: 100,
+                  email: 'customer@email.com',
+                  notes: { ref: ref }
+                }
+              }
+            }
+          })
+        });
+        alert('Payment Successful! 🎉\nPayment ID: ' + response.razorpay_payment_id + '\nRef: ' + ref);
+      },
+      prefill: { name: '', email: '', contact: '' },
+      notes: { ref: ref },
+      theme: { color: '#00ff88' }
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
   }
 
   function setupTicker() {
