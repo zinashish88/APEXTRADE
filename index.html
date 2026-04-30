@@ -647,7 +647,7 @@
 
 <script>
   const RAZORPAY_BASE = "https://rzp.io/rzp/COUwBxv";
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjf1H96z28cQHZxR0DdH0Us80fylOf35BdWalLXTt2Owk5VkMNINCh-gtRenBVl6ZD/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwI623BysN1UivqksnM5sKkvwWpHjju-v8x-QkDX-sl_Iy9mU5HFfIrOOUK5259Iqkk/exec";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
@@ -685,7 +685,7 @@
       handler: function(response) {
         const amount = options.amount / 100;
         const commission = parseFloat((amount * 0.35).toFixed(2));
-        fetch('https://script.google.com/macros/s/AKfycbxjf1H96z28cQHZxR0DdH0Us80fylOf35BdWalLXTt2Owk5VkMNINCh-gtRenBVl6ZD/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbwI623BysN1UivqksnM5sKkvwWpHjju-v8x-QkDX-sl_Iy9mU5HFfIrOOUK5259Iqkk/exec', {
           method: 'POST',
           body: JSON.stringify({
             event: 'payment.captured',
