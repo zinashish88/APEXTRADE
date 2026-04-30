@@ -134,6 +134,28 @@
   .stat-num { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--accent); line-height:1; margin-bottom:8px; }
   .stat-label { font-size:13px; color:var(--muted); font-weight:300; }
 
+  /* COMPARISON */
+  .comparison { padding:80px 0; border-top:1px solid var(--border); }
+  .comparison-intro { text-align:center; margin-bottom:48px; }
+  .comparison-intro h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,6vw,64px); letter-spacing:2px; margin-bottom:12px; }
+  .comparison-intro h2 span { color:var(--accent); }
+  .comparison-intro p { font-size:16px; color:var(--muted); }
+  .comp-table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--border); }
+  .comp-table { width:100%; border-collapse:collapse; min-width:700px; }
+  .comp-table th { background:var(--surface2); padding:16px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); text-align:center; }
+  .comp-table th.apex-col { color:var(--accent); background:rgba(0,255,136,0.06); border-bottom:2px solid var(--accent); }
+  .comp-table td { padding:14px 20px; font-size:13px; border-bottom:1px solid var(--border); text-align:center; color:var(--muted); vertical-align:middle; }
+  .comp-table td:first-child { text-align:left; color:var(--text); font-weight:500; font-size:14px; }
+  .comp-table td.apex-col { background:rgba(0,255,136,0.03); color:var(--accent); font-weight:700; }
+  .comp-table tr:last-child td { border-bottom:none; }
+  .comp-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .comp-table tr:hover td.apex-col { background:rgba(0,255,136,0.06); }
+  .check { color:var(--accent); font-size:16px; }
+  .cross { color:#ff4444; font-size:16px; }
+  .price-highlight { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--accent); }
+  .price-muted { font-family:'JetBrains Mono',monospace; font-size:12px; color:#ff4444; }
+  .comp-badge { display:inline-block; background:var(--accent); color:#000; font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px; letter-spacing:1px; margin-left:6px; vertical-align:middle; }
+
   /* TESTIMONIALS */
   .testimonials { padding:80px 0; border-top:1px solid var(--border); }
   .testimonials-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
@@ -219,6 +241,19 @@
     .login-box { padding:32px 20px; }
     .buy-btn-big { padding:16px 32px; font-size:16px; }
   }
+
+  /* SUCCESS POPUP */
+  .popup-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; padding:24px; }
+  .popup-box { background:var(--card-bg); border:1px solid rgba(0,255,136,0.3); border-radius:24px; padding:48px 36px; text-align:center; max-width:440px; width:100%; position:relative; }
+  .popup-box::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(90deg,transparent,var(--accent),transparent); border-radius:24px 24px 0 0; }
+  .popup-icon { font-size:64px; margin-bottom:16px; }
+  .popup-title { font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--accent); letter-spacing:2px; margin-bottom:8px; }
+  .popup-sub { font-size:15px; color:var(--muted); margin-bottom:32px; line-height:1.6; }
+  .popup-download-btn { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:16px; padding:16px 40px; border-radius:12px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; margin-bottom:16px; width:100%; justify-content:center; }
+  .popup-download-btn:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,255,136,0.3); }
+  .popup-close { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:13px; padding:10px 24px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; width:100%; }
+  .popup-close:hover { border-color:var(--muted); color:var(--text); }
+  .popup-note { font-size:12px; color:var(--muted); margin-top:16px; font-family:'JetBrains Mono',monospace; }
 </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
@@ -317,14 +352,14 @@
           <div class="compare-row compare-total">
             <div class="compare-feature">Total Value</div>
             <div class="compare-them">₹6,500+/yr</div>
-            <div class="compare-us">₹600 ONCE</div>
+            <div class="compare-us">₹599 ONCE</div>
           </div>
         </div>
 
         <div class="price-block">
-          <div class="price-was">Market Price <span>₹1,000</span></div>
+          <div class="price-was">Market Price <span>₹999</span></div>
           <div class="price-now">
-            <div class="price-big">₹600</div>
+            <div class="price-big">₹599</div>
             <div class="price-tag-right">
               <div class="off-badge">40% OFF</div>
               <div class="price-save">Save ₹400</div>
@@ -333,7 +368,7 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹600</button>
+        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹599</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -351,12 +386,51 @@
     <div class="container">
       <div class="section-label">Features</div>
       <div class="features-grid">
-        <div class="feature-card"><div class="feature-icon">📊</div><h3>Advanced Analytics</h3><p>Win rate, RR ratio, max drawdown, streak analysis — everything in one place. See your trading patterns with crystal clarity.</p></div>
-        <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI Trade Coach</h3><p>Get AI feedback after every trade. Pattern recognition and personalized tips to sharpen your trading edge.</p></div>
-        <div class="feature-card"><div class="feature-icon">🎨</div><h3>6 Color Themes</h3><p>Dark mode by default. Choose from 6 beautiful themes — trade comfortably for hours without eye strain.</p></div>
-        <div class="feature-card"><div class="feature-icon">📱</div><h3>PWA — Works Offline</h3><p>Install on your phone, works without internet. Fast and reliable during market hours when you need it most.</p></div>
-        <div class="feature-card"><div class="feature-icon">📈</div><h3>MT5 CSV Import</h3><p>Directly import CSV from XM Global and other brokers. No manual entry — your trades sync automatically.</p></div>
-        <div class="feature-card"><div class="feature-icon">🔒</div><h3>Your Data, Your Control</h3><p>No cloud, no subscription, no data leaks. Your trading data stays on your device — completely private.</p></div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Multi-Journal Dashboard</h3>
+          <p>Manage multiple trading journals in one place. Track Net P&L, Win Rate, Avg R:R, Profit Factor and Max Drawdown — all in real time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Deep Analytics</h3>
+          <p>Equity curve, Win vs Loss chart, Best/Worst trade, Win streak, Loss streak, Expectancy — every metric a serious trader needs.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>AI Trade Coach</h3>
+          <p>Get personalized AI feedback after every trade. Identifies patterns like FOMO, revenge trading, and early exits — and tells you how to fix them.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Prop Firm Challenge Tracker</h3>
+          <p>Track your funded account challenges with daily loss limits, max drawdown rules, and profit targets — built for HFT and prop traders.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>Setup Analysis Board</h3>
+          <p>Log your trade setups with Before & After chart screenshots. Track Success, Failed and Pending setups with accuracy percentage.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h3>Badges & Milestones</h3>
+          <p>Gamified trading progression — earn XP, unlock badges and level up from Novice to Legend. Stay motivated and consistent.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📂</div>
+          <h3>MT5 CSV Import</h3>
+          <p>Import your trades directly from XM Global and other MT5 brokers via CSV. Zero manual entry — your history syncs instantly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Forex Factory Calendar</h3>
+          <p>Built-in economic calendar integration. Never miss a high-impact news event — plan your trades around the market.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>100% Private & Offline</h3>
+          <p>No cloud, no server, no subscription. All data stored locally on your device. Works completely offline — your trades stay yours.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -367,7 +441,120 @@
       <div class="stats-grid">
         <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Color Themes</div></div>
         <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Trade Entries</div></div>
-        <div class="stat-item"><div class="stat-num">₹600</div><div class="stat-label">One Time Only</div></div>
+        <div class="stat-item"><div class="stat-num">₹599</div><div class="stat-label">One Time Only</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="comparison">
+    <div class="container">
+      <div class="comparison-intro">
+        <h2>WHY <span>APEXTRADE</span> WINS</h2>
+        <p>Compare us with the top trading journals in the market</p>
+      </div>
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Feature</th>
+              <th class="apex-col">ApexTrade <span class="comp-badge">YOU</span></th>
+              <th>TraderSync</th>
+              <th>Edgewonk</th>
+              <th>Tradervue</th>
+              <th>TradeZella</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>💰 Price</td>
+              <td class="apex-col"><span class="price-highlight">₹599</span><br><small style="color:var(--muted);font-size:11px;">One Time Forever</small></td>
+              <td><span class="price-muted">$29–$80/mo</span><br><small style="font-size:11px;">₹2,500–₹6,700/mo</small></td>
+              <td><span class="price-muted">$197/year</span><br><small style="font-size:11px;">₹16,500/year</small></td>
+              <td><span class="price-muted">$29–$49/mo</span><br><small style="font-size:11px;">₹2,400–₹4,100/mo</small></td>
+              <td><span class="price-muted">$29–$49/mo</span><br><small style="font-size:11px;">₹2,400–₹4,100/mo</small></td>
+            </tr>
+            <tr>
+              <td>🤖 AI Trade Coach</td>
+              <td class="apex-col"><span class="check">✓</span> Included</td>
+              <td>Elite only ($80/mo)</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+              <td>All plans</td>
+            </tr>
+            <tr>
+              <td>📊 Advanced Analytics</td>
+              <td class="apex-col"><span class="check">✓</span> Full</td>
+              <td><span class="check">✓</span> Full</td>
+              <td><span class="check">✓</span> Full</td>
+              <td>Limited</td>
+              <td><span class="check">✓</span> Full</td>
+            </tr>
+            <tr>
+              <td>⚡ Prop Firm Tracker</td>
+              <td class="apex-col"><span class="check">✓</span> Built-in</td>
+              <td>Premium only</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>🔍 Setup Analysis</td>
+              <td class="apex-col"><span class="check">✓</span> With Screenshots</td>
+              <td>Limited</td>
+              <td><span class="check">✓</span></td>
+              <td><span class="cross">✗</span></td>
+              <td>Limited</td>
+            </tr>
+            <tr>
+              <td>🏆 Badges & Gamification</td>
+              <td class="apex-col"><span class="check">✓</span> Built-in</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span></td>
+            </tr>
+            <tr>
+              <td>📂 MT5 CSV Import</td>
+              <td class="apex-col"><span class="check">✓</span> MT5 Brokers</td>
+              <td>700+ brokers</td>
+              <td>MT4/MT5 only</td>
+              <td>80+ brokers</td>
+              <td>500+ brokers</td>
+            </tr>
+            <tr>
+              <td>📱 Works Offline</td>
+              <td class="apex-col"><span class="check">✓</span> 100% Offline</td>
+              <td><span class="cross">✗</span> Cloud only</td>
+              <td><span class="cross">✗</span> Cloud only</td>
+              <td><span class="cross">✗</span> Cloud only</td>
+              <td><span class="cross">✗</span> Cloud only</td>
+            </tr>
+            <tr>
+              <td>🔒 Data Privacy</td>
+              <td class="apex-col"><span class="check">✓</span> Local Device</td>
+              <td>Cloud stored</td>
+              <td>Cloud stored</td>
+              <td>Cloud stored</td>
+              <td>Cloud stored</td>
+            </tr>
+            <tr>
+              <td>🇮🇳 Indian Rupee (₹)</td>
+              <td class="apex-col"><span class="check">✓</span> Native INR</td>
+              <td><span class="cross">✗</span> USD only</td>
+              <td><span class="cross">✗</span> USD only</td>
+              <td><span class="cross">✗</span> USD only</td>
+              <td><span class="cross">✗</span> USD only</td>
+            </tr>
+            <tr>
+              <td>💵 3 Year Total Cost</td>
+              <td class="apex-col"><span class="price-highlight">₹599</span></td>
+              <td><span class="price-muted">₹90,000+</span></td>
+              <td><span class="price-muted">₹49,500</span></td>
+              <td><span class="price-muted">₹87,000+</span></td>
+              <td><span class="price-muted">₹87,000+</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -388,7 +575,7 @@
         </div>
         <div class="testimonial-card">
           <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"Best ₹600 I've spent on trading. My win rate went from 42% to 58% in 2 months of consistent journaling."</p>
+          <p class="testimonial-text">"Best ₹599 I've spent on trading. My win rate went from 42% to 58% in 2 months of consistent journaling."</p>
           <div class="testimonial-author"><div class="author-avatar">🧔</div><div><div class="author-name">Vikram T.</div><div class="author-role">Forex Trader, Delhi</div></div></div>
         </div>
       </div>
@@ -399,7 +586,7 @@
     <div class="container">
       <div class="section-label">FAQ</div>
       <div class="faq-list">
-        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is this a one-time payment or subscription?<span class="arrow">+</span></button><div class="faq-answer">100% one-time payment of ₹600. No monthly fees, no hidden charges. Pay once, use forever.</div></div>
+        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is this a one-time payment or subscription?<span class="arrow">+</span></button><div class="faq-answer">100% one-time payment of ₹599. No monthly fees, no hidden charges. Pay once, use forever.</div></div>
         <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">What format is the journal — app or website?<span class="arrow">+</span></button><div class="faq-answer">It's a single HTML file that works in any browser. You can also install it as a PWA on your phone for an app-like experience.</div></div>
         <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is my trading data safe?<span class="arrow">+</span></button><div class="faq-answer">Completely. All data is stored locally on your device. Nothing is uploaded to any server — your trades stay private.</div></div>
         <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Which brokers are supported for CSV import?<span class="arrow">+</span></button><div class="faq-answer">XM Global MT5 is fully supported. Manual entry works for all brokers. More broker integrations coming soon.</div></div>
@@ -447,7 +634,7 @@
       <div class="commission-card">
         <div class="commission-label">Total Commission Earned</div>
         <div class="commission-amount" id="totalCommission">₹0</div>
-        <div class="commission-sub">35% of ₹600 per sale</div>
+        <div class="commission-sub">35% of ₹599 per sale</div>
       </div>
       <div class="payout-info">
         <div class="payout-icon">💸</div>
@@ -490,7 +677,7 @@
     const ref = getRefCode() || 'direct';
     const options = {
       key: 'rzp_test_Si3bXYg7S4MkqR',
-      amount: 60000, // 600 rupees in paise
+      amount: 59900, // 600 rupees in paise
       currency: 'INR',
       name: 'ApexTrade Journal',
       description: 'Lifetime Access',
@@ -514,7 +701,7 @@
             }
           })
         });
-        alert('Payment Successful! 🎉\nRef: ' + ref + '\nCommission: ₹' + commission);
+        document.getElementById('successPopup').style.display = 'flex';
       },
       prefill: { name: '', email: '', contact: '' },
       notes: { ref: ref },
@@ -550,9 +737,15 @@
     try {
       const res = await fetch(`${SCRIPT_URL}?ref=${ref}`);
       const data = await res.json();
-      currentRef = ref;
-      showDashboard(data);
+      if (!data.valid) {
+        document.getElementById('errorMsg').textContent = '❌ Invalid referral code. Please check and try again.';
+        document.getElementById('errorMsg').classList.add('show');
+      } else {
+        currentRef = ref;
+        showDashboard(data);
+      }
     } catch(err) {
+      document.getElementById('errorMsg').textContent = '❌ Network error. Please try again.';
       document.getElementById('errorMsg').classList.add('show');
     }
     document.getElementById('dashLoading').classList.remove('show');
@@ -562,7 +755,7 @@
   function showDashboard(data) {
     document.getElementById('loginBox').style.display = 'none';
     document.getElementById('affiliateDash').classList.add('show');
-    document.getElementById('displayRef').textContent = data.ref || currentRef;
+    document.getElementById('displayRef').textContent = data.name ? data.name + ' (' + (data.ref || currentRef) + ')' : (data.ref || currentRef);
     document.getElementById('totalSales').textContent = data.totalSales || 0;
     document.getElementById('totalCommission').textContent = `₹${data.totalCommission || 0}`;
   }
@@ -590,5 +783,22 @@
   setupTicker();
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
 </script>
+
+<!-- SUCCESS POPUP -->
+<div class="popup-overlay" id="successPopup">
+  <div class="popup-box">
+    <div class="popup-icon">🎉</div>
+    <div class="popup-title">PAYMENT SUCCESSFUL!</div>
+    <div class="popup-sub">Thank you for purchasing ApexTrade Journal!<br>Your lifetime access is ready to download.</div>
+    <a href="apex-journal.html" download="ApexTrade-Journal.html" class="popup-download-btn">
+      ⬇️ Download ApexTrade Journal
+    </a>
+    <button class="popup-close" onclick="document.getElementById('successPopup').style.display='none'">
+      Close
+    </button>
+    <div class="popup-note">📌 Save the file to your device for lifetime access</div>
+  </div>
+</div>
+
 </body>
 </html>
