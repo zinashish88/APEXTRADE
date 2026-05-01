@@ -701,13 +701,16 @@
             }
           })
         });
-        document.getElementById('successPopup').style.display = 'flex';
+        document.getElementById('successPopup').style.display = 'flex'; window._paymentSuccess = true;
       },
       prefill: { name: '', email: '', contact: '' },
       notes: { ref: ref },
       theme: { color: '#00ff88' }
     };
     const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(response) {
+      console.log('Payment failed');
+    });
     rzp.open();
   }
 
