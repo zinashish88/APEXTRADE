@@ -368,7 +368,7 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <a href="https://rzp.io/rzp/CFZpbrXw" target="_blank" class="buy-btn-big" id="buyBtnBig">🚀 Get Lifetime Access — ₹599</a>
+        <a href="https://rzp.io/rzp/CFZpbrXw" onclick="localStorage.setItem('showDownload','1')" target="_blank" class="buy-btn-big" id="buyBtnBig">🚀 Get Lifetime Access — ₹599</a>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -676,7 +676,7 @@
   function openCheckout() {
     const ref = getRefCode() || 'direct';
     const options = {
-      key: 'rzp_test_Si3bXYg7S4MkqR',
+      key: 'rzp_live_Sk2OYim377zmIe',
       amount: 59900, // 599 rupees in paise
       currency: 'INR',
       name: 'ApexTrade Journal',
@@ -784,6 +784,13 @@
 
   setupBuyButton();
   setupTicker();
+  // Show download popup if returning from payment
+  if(localStorage.getItem('showDownload') === '1') {
+    localStorage.removeItem('showDownload');
+    setTimeout(() => {
+      document.getElementById('successPopup').style.display = 'flex';
+    }, 1000);
+  }
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
 </script>
 
