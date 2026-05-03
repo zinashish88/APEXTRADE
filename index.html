@@ -368,7 +368,7 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹1 (Test)</button>
+        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹599</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -647,7 +647,7 @@
 
 <script>
   const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzfOHw3gdFTQN7Xj2iRETI0nPQSQe9xnLqM993qCkbd2GMv09FwxwhQgvpi8WCtxZaX/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw88P2up_Itww2jbBRtAJhz6EyeFR2zLri4sSjvUEJXlrx5QK0IRg19dCjABq5IcmFH/exec";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
@@ -677,7 +677,7 @@
     const ref = getRefCode() || 'direct';
     const options = {
       key: 'rzp_live_SkrgYaCjB5ymU3',
-      amount: 100, // ₹1 test
+      amount: 59900, // ₹599
       currency: 'INR',
       name: 'ApexTrade Journal',
       description: 'Lifetime Access',
@@ -685,7 +685,7 @@
       handler: function(response) {
         const amount = options.amount / 100;
         const commission = parseFloat((amount * 0.35).toFixed(2));
-        fetch('https://script.google.com/macros/s/AKfycbzfOHw3gdFTQN7Xj2iRETI0nPQSQe9xnLqM993qCkbd2GMv09FwxwhQgvpi8WCtxZaX/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbw88P2up_Itww2jbBRtAJhz6EyeFR2zLri4sSjvUEJXlrx5QK0IRg19dCjABq5IcmFH/exec', {
           method: 'POST',
           body: JSON.stringify({
             event: 'payment.captured',
