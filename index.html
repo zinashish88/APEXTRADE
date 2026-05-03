@@ -368,7 +368,7 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <a href="https://rzp.io/rzp/v6VDObH" class="buy-btn-big" id="buyBtnBig" onclick="localStorage.setItem('showDownload','1')">🚀 Get Lifetime Access — ₹1 (Test)</a>
+        <a href="https://rzp.io/rzp/v6VDObH" class="buy-btn-big" id="buyBtnBig">🚀 Get Lifetime Access — ₹1 (Test)</a>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -784,12 +784,12 @@
 
   setupBuyButton();
   setupTicker();
-  // Show download popup if returning from payment
-  if(localStorage.getItem('showDownload') === '1') {
-    localStorage.removeItem('showDownload');
+  // Show download popup only if ?download=1 in URL (Razorpay redirect)
+  const urlParams = new URLSearchParams(window.location.search);
+  if(urlParams.get('download') === '1') {
     setTimeout(() => {
       document.getElementById('successPopup').style.display = 'flex';
-    }, 1000);
+    }, 500);
   }
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
 </script>
