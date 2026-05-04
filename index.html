@@ -265,6 +265,8 @@
     <div class="nav-right">
       <div class="nav-badge">LIVE</div>
       <button class="affiliate-nav-btn" onclick="showPage('affiliate')">Affiliate Login</button>
+      <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" class="affiliate-nav-btn" style="text-decoration:none;">📱 Telegram</a>
+      <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" class="affiliate-nav-btn" style="text-decoration:none;color:#E1306C;border-color:#E1306C;">📸 Instagram</a>
     </div>
   </div>
 </nav>
@@ -595,6 +597,26 @@
     </div>
   </section>
 
+  <section style="padding:60px 0;border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label">Contact & Support</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
+        <div class="feature-card" style="text-align:center;">
+          <div class="feature-icon">📱</div>
+          <h3>Telegram</h3>
+          <p style="margin-bottom:16px;">Join our Telegram for support, updates and trading tips.</p>
+          <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" style="display:inline-block;background:var(--accent);color:#000;font-weight:700;font-size:13px;padding:10px 24px;border-radius:8px;text-decoration:none;font-family:'DM Sans',sans-serif;">Join Telegram →</a>
+        </div>
+        <div class="feature-card" style="text-align:center;">
+          <div class="feature-icon">📸</div>
+          <h3>Instagram</h3>
+          <p style="margin-bottom:16px;">Follow us on Instagram for trading content and journal updates.</p>
+          <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" style="display:inline-block;background:#E1306C;color:#fff;font-weight:700;font-size:13px;padding:10px 24px;border-radius:8px;text-decoration:none;font-family:'DM Sans',sans-serif;">Follow Instagram →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <p>Made with ❤️ for <span class="accent">Traders</span> &nbsp;•&nbsp; ApexTrade Journal &nbsp;•&nbsp; <span class="accent">Lifetime Access</span></p>
@@ -613,6 +635,10 @@
       <div class="input-group">
         <label>Your Referral Code</label>
         <input type="text" id="refInput" placeholder="e.g. rahul" autocomplete="off" />
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="off" />
       </div>
       <button class="check-btn" id="checkBtn" onclick="checkStats()">View Dashboard →</button>
       <div class="dash-loading" id="dashLoading">Loading... ⏳</div>
@@ -640,6 +666,15 @@
         <div class="payout-icon">💸</div>
         <div class="payout-text"><strong>Payout Schedule</strong>Payouts on the 1st of every month via UPI/Bank Transfer. Minimum 1 sale (₹210).</div>
       </div>
+      <div class="payout-info" style="margin-top:12px;">
+        <div class="payout-icon">💬</div>
+        <div class="payout-text">
+          <strong>Contact & Support</strong>
+          For payout queries or support, reach us on Telegram.
+          <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-top:4px;">📱 t.me/APEXTRADEJOURNEL →</a>
+          <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" style="color:#E1306C;font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-top:4px;">📸 instagram.com/apexjournel →</a>
+        </div>
+      </div>
       <button class="back-btn" onclick="logoutAffiliate()">← Back to Website</button>
     </div>
   </div>
@@ -647,7 +682,7 @@
 
 <script>
   const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw88P2up_Itww2jbBRtAJhz6EyeFR2zLri4sSjvUEJXlrx5QK0IRg19dCjABq5IcmFH/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPHBcglIVOngB9LiDCL-4Gg25EM0EnfxpeC7lArdyFMDLRKGz1W6iHf9fFRclYPiqR/exec";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
@@ -685,7 +720,7 @@
       handler: function(response) {
         const amount = options.amount / 100;
         const commission = parseFloat((amount * 0.35).toFixed(2));
-        fetch('https://script.google.com/macros/s/AKfycbw88P2up_Itww2jbBRtAJhz6EyeFR2zLri4sSjvUEJXlrx5QK0IRg19dCjABq5IcmFH/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbxPHBcglIVOngB9LiDCL-4Gg25EM0EnfxpeC7lArdyFMDLRKGz1W6iHf9fFRclYPiqR/exec', {
           method: 'POST',
           body: JSON.stringify({
             event: 'payment.captured',
@@ -733,15 +768,20 @@
 
   async function checkStats() {
     const ref = document.getElementById('refInput').value.trim().toLowerCase();
-    if (!ref) return;
+    const password = document.getElementById('passwordInput').value.trim();
+    if (!ref || !password) return;
     document.getElementById('checkBtn').disabled = true;
     document.getElementById('dashLoading').classList.add('show');
     document.getElementById('errorMsg').classList.remove('show');
     try {
-      const res = await fetch(`${SCRIPT_URL}?ref=${ref}`);
+      const res = await fetch(`${SCRIPT_URL}?ref=${ref}&password=${encodeURIComponent(password)}`);
       const data = await res.json();
       if (!data.valid) {
-        document.getElementById('errorMsg').textContent = '❌ Invalid referral code. Please check and try again.';
+        if(data.wrongPassword) {
+          document.getElementById('errorMsg').textContent = '❌ Wrong password. Please try again.';
+        } else {
+          document.getElementById('errorMsg').textContent = '❌ Invalid referral code. Please check and try again.';
+        }
         document.getElementById('errorMsg').classList.add('show');
       } else {
         currentRef = ref;
@@ -781,6 +821,7 @@
   }
 
   document.getElementById('refInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkStats(); });
+  document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkStats(); });
 
   setupBuyButton();
   setupTicker();
