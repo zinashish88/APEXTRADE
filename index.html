@@ -78,6 +78,8 @@
   .buy-sub { font-size:14px; color:var(--muted); margin-bottom:36px; }
   .buy-btn-big { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:18px; padding:18px 56px; border-radius:14px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; }
   .buy-btn-big:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 16px 48px rgba(0,255,136,0.3); }
+  .crypto-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#f7931a,#e8a400); color:#000; font-weight:700; font-size:16px; padding:16px 48px; border-radius:14px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; width:100%; transition:all 0.2s; }
+  .crypto-btn:hover { transform:translateY(-2px); box-shadow:0 16px 48px rgba(247,147,26,0.3); opacity:0.9; }
   .ref-badge { margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.15); padding:6px 16px; border-radius:20px; display:none; }
   .ref-badge.show { display:block; }
   .buy-features { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-top:24px; }
@@ -370,7 +372,13 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹1 (Test)</button>
+        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹599</button>
+        <div style="margin:12px 0;display:flex;align-items:center;gap:12px;justify-content:center;">
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;">OR</span>
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+        </div>
+        <button class="crypto-btn" onclick="openCryptoCheckout()">₿ Pay with Crypto — $7 USDT</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -682,7 +690,7 @@
 
 <script>
   const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxPHBcglIVOngB9LiDCL-4Gg25EM0EnfxpeC7lArdyFMDLRKGz1W6iHf9fFRclYPiqR/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuGqH8kXg_jEKmKiNITQpDKcjWlBH4ityExagDUpAC3lNHpJ1c2vV3mtspYWPclbqa/exec";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
@@ -708,11 +716,43 @@
     }
   }
 
+  async function openCryptoCheckout() {
+    const ref = getRefCode() || 'direct';
+    try {
+      const res = await fetch('https://api.nowpayments.io/v1/invoice', {
+        method: 'POST',
+        headers: {
+          'x-api-key': 'W69GTC4-PDGM9D9-ME87SET-BTVZ83H',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          price_amount: 7,
+          price_currency: 'usd',
+          pay_currency: 'usdttrc20',
+          order_description: 'ApexTrade Journal - Lifetime Access',
+          order_id: 'APEX_' + Date.now() + '_' + ref,
+          success_url: window.location.origin + window.location.pathname + '?crypto_success=1',
+          cancel_url: window.location.href,
+          is_fixed_rate: true
+        })
+      });
+      const data = await res.json();
+      if (data.invoice_url) {
+        localStorage.setItem('apextrade_ref', ref);
+        window.open(data.invoice_url, '_blank');
+      } else {
+        alert('Error creating crypto payment. Please try again.');
+      }
+    } catch(err) {
+      alert('Network error. Please try again.');
+    }
+  }
+
   function openCheckout() {
     const ref = getRefCode() || 'direct';
     const options = {
       key: 'rzp_live_SkrgYaCjB5ymU3',
-      amount: 100, // ₹1 test
+      amount: 59900, // ₹599
       currency: 'INR',
       name: 'ApexTrade Journal',
       description: 'Lifetime Access',
@@ -720,7 +760,7 @@
       handler: function(response) {
         const amount = options.amount / 100;
         const commission = parseFloat((amount * 0.35).toFixed(2));
-        fetch('https://script.google.com/macros/s/AKfycbxPHBcglIVOngB9LiDCL-4Gg25EM0EnfxpeC7lArdyFMDLRKGz1W6iHf9fFRclYPiqR/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbwuGqH8kXg_jEKmKiNITQpDKcjWlBH4ityExagDUpAC3lNHpJ1c2vV3mtspYWPclbqa/exec', {
           method: 'POST',
           body: JSON.stringify({
             event: 'payment.captured',
@@ -825,6 +865,11 @@
 
   setupBuyButton();
   setupTicker();
+  if(new URLSearchParams(window.location.search).get('crypto_success') === '1') {
+    setTimeout(() => {
+      document.getElementById('successPopup').style.display = 'flex';
+    }, 500);
+  }
   // Show download popup only if ?download=1 in URL (Razorpay redirect)
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('download') === '1') {
