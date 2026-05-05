@@ -378,7 +378,7 @@
           <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;">OR</span>
           <div style="flex:1;height:1px;background:var(--border);"></div>
         </div>
-        <button class="crypto-btn" onclick="openCryptoCheckout()">₿ Pay with Crypto — $7 USDT</button>
+        <button class="crypto-btn" onclick="openCryptoCheckout()">₿ Pay with Crypto — $8 USDT</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -726,9 +726,10 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          price_amount: 7,
+          price_amount: 8,
           price_currency: 'usd',
           pay_currency: 'usdttrc20',
+          pay_amount: 8,
           order_description: 'ApexTrade Journal - Lifetime Access',
           order_id: 'APEX_' + Date.now() + '_' + ref,
           success_url: window.location.origin + window.location.pathname + '?crypto_success=1',
