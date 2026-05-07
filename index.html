@@ -719,33 +719,17 @@
   async function openCryptoCheckout() {
     const ref = getRefCode() || 'direct';
     try {
-      const res = await fetch('https://api.nowpayments.io/v1/invoice', {
-        method: 'POST',
-        headers: {
-          'x-api-key': 'W69GTC4-PDGM9D9-ME87SET-BTVZ83H',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          price_amount: 8,
-          price_currency: 'usd',
-          pay_currency: 'usdttrc20',
-          pay_amount: 8,
-          order_description: 'ApexTrade Journal - Lifetime Access',
-          order_id: 'APEX_' + Date.now() + '_' + ref,
-          success_url: window.location.origin + window.location.pathname + '?crypto_success=1',
-          cancel_url: window.location.href,
-          is_fixed_rate: true
-        })
-      });
-      const data = await res.json();
+      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref));
+      const text = await res.text();
+      const data = JSON.parse(text);
       if (data.invoice_url) {
         localStorage.setItem('apextrade_ref', ref);
-        window.open(data.invoice_url, '_blank');
+        window.location.href = data.invoice_url;
       } else {
         alert('Error creating crypto payment. Please try again.');
       }
     } catch(err) {
-      alert('Network error. Please try again.');
+      alert('Error: ' + err.message);
     }
   }
 
