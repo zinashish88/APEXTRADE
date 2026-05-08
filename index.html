@@ -718,6 +718,10 @@
 
   async function openCryptoCheckout() {
     const ref = getRefCode() || 'direct';
+    const btn = document.querySelector('.crypto-btn');
+    const original = btn.innerHTML;
+    btn.innerHTML = '⏳ Creating payment...';
+    btn.disabled = true;
     try {
       const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref));
       const text = await res.text();
@@ -727,9 +731,13 @@
         window.location.href = data.invoice_url;
       } else {
         alert('Error creating crypto payment. Please try again.');
+        btn.innerHTML = original;
+        btn.disabled = false;
       }
     } catch(err) {
       alert('Error: ' + err.message);
+      btn.innerHTML = original;
+      btn.disabled = false;
     }
   }
 
