@@ -19,7 +19,7 @@
   .page.active { display:block; }
 
   /* NAV */
-  nav { padding:20px 0; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(10,10,10,0.95); backdrop-filter:blur(10px); z-index:100; }
+  nav { padding:20px 0; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(10,10,10,0.95); backdrop-filter:blur(10px); z-index:100; position:relative; }
   nav .container { display:flex; align-items:center; justify-content:space-between; }
   .logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:2px; color:var(--accent); cursor:pointer; }
   .logo span { color:var(--text); }
@@ -690,9 +690,22 @@
 
 <script>
   const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyPq1lzL9qcyoUrKe9hiDQnwcG5sUCIMaRWzx_5zg5wHmKErlF2Gzi7RC6kAexrpR__/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyym2krNttTcCDS7kcVFbD5XEmn_-qG5DB4EbiXamY82SJYB1bGf_0-rqE5Myikxt21/exec";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
+
+  function toggleContactMenu() {
+    var menu = document.getElementById('contactMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  }
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', function(e) {
+    var menu = document.getElementById('contactMenu');
+    if (menu && !e.target.closest('#contactMenu') && !e.target.closest('.affiliate-nav-btn')) {
+      menu.style.display = 'none';
+    }
+  });
 
   function showPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -753,7 +766,7 @@
       handler: function(response) {
         const amount = options.amount / 100;
         const commission = parseFloat((amount * 0.35).toFixed(2));
-        fetch('https://script.google.com/macros/s/AKfycbyPq1lzL9qcyoUrKe9hiDQnwcG5sUCIMaRWzx_5zg5wHmKErlF2Gzi7RC6kAexrpR__/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbyym2krNttTcCDS7kcVFbD5XEmn_-qG5DB4EbiXamY82SJYB1bGf_0-rqE5Myikxt21/exec', {
           method: 'POST',
           body: JSON.stringify({
             event: 'payment.captured',
