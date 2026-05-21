@@ -33,6 +33,12 @@
   .hero-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); color:var(--accent); font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:8px 20px; border-radius:30px; margin-bottom:36px; font-family:'JetBrains Mono',monospace; }
   .hero-tag::before { content:'●'; animation:pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .social-proof-bar { display:inline-flex; align-items:center; gap:16px; background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.15); border-radius:30px; padding:8px 20px; margin-bottom:24px; }
+  .sp-item { display:flex; align-items:center; gap:6px; }
+  .sp-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
+  .sp-num { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--accent); }
+  .sp-label { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+  .sp-divider { color:var(--border); font-size:16px; }
   .hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,10vw,110px); line-height:0.9; letter-spacing:2px; margin-bottom:28px; }
   .hero h1 .line2 { color:var(--accent); }
   .hero h1 .line3 { color:var(--muted); font-size:0.6em; }
@@ -285,6 +291,18 @@
   <section class="hero">
     <div class="container">
       <div class="hero-tag">Professional Trading Journal</div>
+      <div class="social-proof-bar">
+        <div class="sp-item">
+          <span class="sp-dot"></span>
+          <span id="todayBuyers" class="sp-num">24</span>
+          <span class="sp-label">purchased today</span>
+        </div>
+        <div class="sp-divider">•</div>
+        <div class="sp-item">
+          <span class="sp-num" id="totalUsers">3,375</span>
+          <span class="sp-label">traders using ApexTrade</span>
+        </div>
+      </div>
       <h1>
         <div>TRACK YOUR</div>
         <div class="line2">TRADES.</div>
@@ -669,6 +687,44 @@
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
+  function setupSocialProof() {
+    // Base date - May 1, 2026
+    var baseDate = new Date('2026-05-01');
+    var today = new Date();
+    var daysDiff = Math.floor((today - baseDate) / (1000 * 60 * 60 * 24));
+    
+    // Total users: 3375 + ~8 per day
+    var totalUsers = 3375 + (daysDiff * 8);
+    document.getElementById('totalUsers').textContent = totalUsers.toLocaleString('en-IN');
+    
+    // Today buyers: random between 20-30
+    var seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+    var todayBuyers = 20 + (seed % 11);
+    document.getElementById('todayBuyers').textContent = todayBuyers;
+    
+    // Animate total users counter
+    var target = totalUsers;
+    var start = totalUsers - 50;
+    var current = start;
+    var timer = setInterval(function() {
+      current += 2;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      document.getElementById('totalUsers').textContent = current.toLocaleString('en-IN');
+    }, 30);
+    
+    // Random bump every 2-5 mins
+    setTimeout(function() {
+      var el = document.getElementById('todayBuyers');
+      var num = parseInt(el.textContent);
+      if (num < 30) {
+        el.textContent = num + 1;
+      }
+    }, Math.random() * 180000 + 120000);
+  }
+
   function toggleContactMenu() {
     var menu = document.getElementById('contactMenu');
     menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
@@ -822,6 +878,7 @@
 
   setupBuyButton();
   setupTicker();
+  setupSocialProof();
 
   // Show download popup only if ?download=1 in URL (Razorpay redirect)
   const urlParams = new URLSearchParams(window.location.search);
