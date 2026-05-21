@@ -3,891 +3,619 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ApexTrade Journal — Professional Trading Journal</title>
+<title>ApexTrade — Admin Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a; --surface: #111111; --surface2: #1a1a1a;
-    --border: #222222; --accent: #00ff88; --accent2: #ff6b35;
-    --text: #f0f0f0; --muted: #666666; --card-bg: #131313;
+    --bg: #080808;
+    --surface: #0f0f0f;
+    --surface2: #161616;
+    --border: #1e1e1e;
+    --accent: #00ff88;
+    --accent2: #ff6b35;
+    --accent3: #6c63ff;
+    --text: #f0f0f0;
+    --muted: #555;
+    --card: #111;
+    --red: #ff4444;
+    --yellow: #ffd700;
   }
+
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; overflow-x:hidden; min-height:100vh; }
-  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; z-index:0; }
-  .container { max-width:1100px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
-  .page { display:none; }
-  .page.active { display:block; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
 
-  /* NAV */
-  nav { padding:20px 0; border-bottom:1px solid var(--border); position:sticky; top:0; background:rgba(10,10,10,0.95); backdrop-filter:blur(10px); z-index:100; }
-  nav .container { display:flex; align-items:center; justify-content:space-between; }
-  .logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:2px; color:var(--accent); cursor:pointer; }
-  .logo span { color:var(--text); }
-  .nav-right { display:flex; align-items:center; gap:16px; }
-  .nav-badge { background:var(--accent); color:#000; font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; }
-  .affiliate-nav-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; padding:6px 14px; border-radius:8px; cursor:pointer; font-family:'JetBrains Mono',monospace; letter-spacing:1px; transition:all 0.2s; }
-  .affiliate-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
-
-  /* HERO */
-  .hero { padding:100px 0 80px; text-align:center; }
-  .hero-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); color:var(--accent); font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:8px 20px; border-radius:30px; margin-bottom:36px; font-family:'JetBrains Mono',monospace; }
-  .hero-tag::before { content:'●'; animation:pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,10vw,110px); line-height:0.9; letter-spacing:2px; margin-bottom:28px; }
-  .hero h1 .line2 { color:var(--accent); }
-  .hero h1 .line3 { color:var(--muted); font-size:0.6em; }
-  .hero-sub { font-size:18px; color:var(--muted); max-width:520px; margin:0 auto 0; line-height:1.7; font-weight:300; }
-  .hero-sub strong { color:var(--text); font-weight:500; }
-
-  /* TICKER */
-  .ticker { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:10px 0; overflow:hidden; margin:40px 0; }
-  .ticker-inner { display:flex; gap:48px; animation:ticker 20s linear infinite; white-space:nowrap; }
-  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-  .ticker-item { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); display:flex; align-items:center; gap:8px; }
-  .ticker-item span { color:var(--accent); }
-
-  /* PREVIEW */
-  .preview { padding:60px 0; border-top:1px solid var(--border); }
-  .preview-intro { text-align:center; margin-bottom:40px; }
-  .preview-intro h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,6vw,64px); letter-spacing:2px; margin-bottom:12px; }
-  .preview-intro h2 span { color:var(--accent); }
-  .preview-intro p { font-size:16px; color:var(--muted); }
-  .preview-tabs { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:28px; }
-  .preview-tab { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; padding:8px 20px; border-radius:20px; cursor:pointer; font-family:'JetBrains Mono',monospace; letter-spacing:1px; transition:all 0.2s; }
-  .preview-tab:hover,.preview-tab.active { border-color:var(--accent); color:var(--accent); background:rgba(0,255,136,0.06); }
-  .preview-screen { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; overflow:hidden; display:none; position:relative; }
-  .preview-screen.active { display:block; }
-  .preview-screen::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); z-index:1; }
-  .preview-caption { padding:14px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
-  .preview-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; flex-shrink:0; }
-  .preview-caption span { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); letter-spacing:1px; }
-  .preview-screen img { width:100%; height:auto; display:block; opacity:0.9; transition:opacity 0.2s; }
-  .preview-screen:hover img { opacity:1; }
-
-  /* BUY SECTION */
-  .buy-section { padding:80px 0; border-top:1px solid var(--border); }
-  .buy-wrapper { background:var(--card-bg); border:1px solid rgba(0,255,136,0.2); border-radius:24px; padding:56px 40px; text-align:center; max-width:600px; margin:0 auto; position:relative; overflow:hidden; }
-  .buy-wrapper::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
-  .buy-tag { display:inline-block; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.2); color:var(--accent); font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; padding:6px 18px; border-radius:20px; margin-bottom:24px; }
-  .buy-original { font-size:28px; color:var(--muted); text-decoration:line-through; margin-bottom:4px; font-family:'JetBrains Mono',monospace; }
-
-  .buy-discount-badge { display:inline-block; background:var(--accent2); color:#fff; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:2px; padding:4px 14px; border-radius:20px; margin-bottom:16px; }
-  .buy-dual-price { margin-bottom:8px; }
-  .buy-price-inr { font-family:'Bebas Neue',sans-serif; font-size:56px; color:var(--accent); line-height:1; }
-  .buy-price-inr span { font-size:32px; color:var(--muted); font-family:'JetBrains Mono',monospace; vertical-align:middle; }
-  .buy-sub { font-size:14px; color:var(--muted); margin-bottom:36px; }
-  .buy-btn-big { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:18px; padding:18px 56px; border-radius:14px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; }
-  .buy-btn-big:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 16px 48px rgba(0,255,136,0.3); }
-  .crypto-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#f7931a,#e8a400); color:#000; font-weight:700; font-size:16px; padding:16px 48px; border-radius:14px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; width:100%; transition:all 0.2s; }
-  .crypto-btn:hover { transform:translateY(-2px); box-shadow:0 16px 48px rgba(247,147,26,0.3); opacity:0.9; }
-  .ref-badge { margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.15); padding:6px 16px; border-radius:20px; display:none; }
-  .ref-badge.show { display:block; }
-  .buy-features { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-top:24px; }
-  .buy-features span { font-size:13px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-
-  /* BUY SECTION REDESIGN */
-  .urgency-bar { background:linear-gradient(90deg,#ff6b35,#ff3b3b); color:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; letter-spacing:2px; padding:10px 20px; border-radius:10px; margin-bottom:28px; animation:urgency 2s ease-in-out infinite; }
-  @keyframes urgency { 0%,100%{opacity:1} 50%{opacity:0.8} }
-
-  .compare-table { width:100%; margin-bottom:28px; border:1px solid var(--border); border-radius:14px; overflow:hidden; }
-  .compare-row { display:grid; grid-template-columns:1fr 1fr 1fr; }
-  .compare-row + .compare-row { border-top:1px solid var(--border); }
-  .compare-header { background:var(--surface2); }
-  .compare-feature,.compare-them,.compare-us { padding:12px 16px; font-size:13px; }
-  .compare-feature { color:var(--muted); text-align:left; font-family:'DM Sans',sans-serif; }
-  .compare-them { color:var(--accent2); text-align:center; font-family:'JetBrains Mono',monospace; font-size:12px; }
-  .compare-us { color:var(--accent); text-align:center; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; }
-  .compare-header .compare-them { color:var(--muted); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
-  .compare-header .compare-us { color:var(--accent); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
-  .compare-total { background:rgba(0,255,136,0.04); border-top:1px solid rgba(0,255,136,0.15) !important; }
-  .compare-total .compare-feature { color:var(--text); font-weight:600; }
-  .compare-total .compare-us { font-size:14px; }
-  .cross { color:#ff4444 !important; }
-  .accent { color:var(--accent); }
-
-  .price-block { margin-bottom:28px; }
-  .price-was { font-size:14px; color:var(--muted); margin-bottom:8px; }
-  .price-was span { text-decoration:line-through; color:var(--accent2); font-family:'JetBrains Mono',monospace; }
-  .price-now { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:8px; }
-  .price-big { font-family:'Bebas Neue',sans-serif; font-size:72px; color:var(--accent); line-height:1; }
-  .price-tag-right { display:flex; flex-direction:column; gap:6px; }
-  .off-badge { background:var(--accent2); color:#fff; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; padding:4px 12px; border-radius:20px; }
-  .price-save { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-  .price-equiv { font-size:14px; color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:600; letter-spacing:1px; }
-
-  .trust-row { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
-  .trust-row span { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-
-  /* FEATURES */
-  .features { padding:80px 0; border-top:1px solid var(--border); }
-  .section-label { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); letter-spacing:3px; text-transform:uppercase; margin-bottom:48px; display:flex; align-items:center; gap:12px; }
-  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
-  .features-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
-  .feature-card { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:28px; transition:border-color 0.2s; }
-  .feature-card:hover { border-color:rgba(0,255,136,0.3); }
-  .feature-icon { font-size:28px; margin-bottom:16px; }
-  .feature-card h3 { font-size:16px; font-weight:600; margin-bottom:10px; }
-  .feature-card p { font-size:14px; color:var(--muted); line-height:1.7; }
-
-  /* STATS */
-  .stats { padding:60px 0; border-top:1px solid var(--border); }
-  .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-  .stat-item { background:var(--card-bg); padding:36px 28px; text-align:center; }
-  .stat-num { font-family:'Bebas Neue',sans-serif; font-size:48px; color:var(--accent); line-height:1; margin-bottom:8px; }
-  .stat-label { font-size:13px; color:var(--muted); font-weight:300; }
-
-  /* COMPARISON */
-  .comparison { padding:80px 0; border-top:1px solid var(--border); }
-  .comparison-intro { text-align:center; margin-bottom:48px; }
-  .comparison-intro h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,6vw,64px); letter-spacing:2px; margin-bottom:12px; }
-  .comparison-intro h2 span { color:var(--accent); }
-  .comparison-intro p { font-size:16px; color:var(--muted); }
-  .comp-table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--border); }
-  .comp-table { width:100%; border-collapse:collapse; min-width:700px; }
-  .comp-table th { background:var(--surface2); padding:16px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); text-align:center; }
-  .comp-table th.apex-col { color:var(--accent); background:rgba(0,255,136,0.06); border-bottom:2px solid var(--accent); }
-  .comp-table td { padding:14px 20px; font-size:13px; border-bottom:1px solid var(--border); text-align:center; color:var(--muted); vertical-align:middle; }
-  .comp-table td:first-child { text-align:left; color:var(--text); font-weight:500; font-size:14px; }
-  .comp-table td.apex-col { background:rgba(0,255,136,0.03); color:var(--accent); font-weight:700; }
-  .comp-table tr:last-child td { border-bottom:none; }
-  .comp-table tr:hover td { background:rgba(255,255,255,0.02); }
-  .comp-table tr:hover td.apex-col { background:rgba(0,255,136,0.06); }
-  .check { color:var(--accent); font-size:16px; }
-  .cross { color:#ff4444; font-size:16px; }
-  .price-highlight { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--accent); }
-  .price-muted { font-family:'JetBrains Mono',monospace; font-size:12px; color:#ff4444; }
-  .comp-badge { display:inline-block; background:var(--accent); color:#000; font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px; letter-spacing:1px; margin-left:6px; vertical-align:middle; }
-
-  /* TESTIMONIALS */
-  .testimonials { padding:80px 0; border-top:1px solid var(--border); }
-  .testimonials-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
-  .testimonial-card { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:28px; }
-  .stars { color:var(--accent); font-size:12px; margin-bottom:16px; }
-  .testimonial-text { font-size:15px; color:var(--text); line-height:1.7; margin-bottom:20px; font-style:italic; }
-  .testimonial-author { display:flex; align-items:center; gap:12px; }
-  .author-avatar { width:40px; height:40px; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; }
-  .author-name { font-size:14px; font-weight:600; }
-  .author-role { font-size:12px; color:var(--muted); }
-
-  /* FAQ */
-  .faq { padding:80px 0; border-top:1px solid var(--border); }
-  .faq-list { max-width:700px; margin:0 auto; }
-  .faq-item { border:1px solid var(--border); border-radius:12px; margin-bottom:12px; overflow:hidden; }
-  .faq-question { width:100%; background:var(--card-bg); border:none; color:var(--text); font-size:15px; font-weight:500; padding:20px 24px; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'DM Sans',sans-serif; transition:background 0.2s; }
-  .faq-question:hover { background:var(--surface2); }
-  .faq-question .arrow { color:var(--accent); font-size:18px; transition:transform 0.2s; }
-  .faq-question.open .arrow { transform:rotate(45deg); }
-  .faq-answer { background:var(--bg); padding:0 24px; max-height:0; overflow:hidden; transition:max-height 0.3s ease,padding 0.3s; font-size:14px; color:var(--muted); line-height:1.7; }
-  .faq-answer.open { max-height:200px; padding:16px 24px 20px; }
-
-  /* FOOTER */
-  footer { padding:40px 0; border-top:1px solid var(--border); text-align:center; }
-  footer p { font-size:13px; color:var(--muted); }
-  footer .accent { color:var(--accent); }
-  .footer-affiliate { margin-top:12px; }
-  .footer-affiliate button { background:none; border:none; color:var(--muted); cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:11px; text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; }
-  .footer-affiliate button:hover { color:var(--accent); }
-
-  /* AFFILIATE PAGE */
-  #affiliatePage { min-height:calc(100vh - 70px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px; }
-  .dash-wrapper { width:100%; max-width:480px; }
-  .login-box { background:var(--card-bg); border:1px solid var(--border); border-radius:24px; padding:48px 40px; text-align:center; position:relative; overflow:hidden; }
-  .login-box::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
-  .dash-logo-sub { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; margin-bottom:40px; }
-  .input-group { margin-bottom:20px; text-align:left; }
-  .input-group label { display:block; font-size:11px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; font-family:'JetBrains Mono',monospace; margin-bottom:8px; }
-  .input-group input { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:14px 18px; color:var(--text); font-size:15px; font-family:'JetBrains Mono',monospace; outline:none; transition:border-color 0.2s; letter-spacing:1px; }
-  .input-group input:focus { border-color:rgba(0,255,136,0.4); }
-  .input-group input::placeholder { color:var(--muted); }
-  .check-btn { width:100%; background:var(--accent); color:#000; border:none; border-radius:12px; padding:16px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; margin-top:4px; }
-  .check-btn:hover { background:#00cc6e; transform:translateY(-1px); }
-  .check-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-  .error-msg { color:var(--accent2); font-size:13px; margin-top:12px; font-family:'JetBrains Mono',monospace; display:none; }
-  .error-msg.show { display:block; }
-  .dash-loading { text-align:center; padding:12px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); display:none; }
-  .dash-loading.show { display:block; }
-  .affiliate-dashboard { display:none; }
-  .affiliate-dashboard.show { display:block; }
-  .dash-header-bar { background:var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:20px 24px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; position:relative; overflow:hidden; }
-  .dash-header-bar::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
-  .dash-logo2 { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--accent); }
-  .dash-logo2 span { color:var(--text); }
-  .live-dot { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); display:flex; align-items:center; gap:6px; }
-  .live-dot::before { content:'●'; animation:pulse 2s infinite; }
-  .ref-info-bar { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
-  .ref-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
-  .ref-code-disp { font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--accent); font-weight:600; }
-  .copy-link-btn { background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.2); color:var(--accent); padding:8px 14px; border-radius:8px; font-size:11px; cursor:pointer; font-family:'JetBrains Mono',monospace; transition:all 0.2s; }
-  .copy-link-btn:hover { background:rgba(0,255,136,0.2); }
-  .dash-stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-  .dash-stat-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:22px 18px; text-align:center; }
-  .dash-stat-num { font-family:'Bebas Neue',sans-serif; font-size:48px; line-height:1; margin-bottom:6px; }
-  .dash-stat-num.green { color:var(--accent); }
-  .dash-stat-num.orange { color:var(--accent2); }
-  .dash-stat-label { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-family:'JetBrains Mono',monospace; }
-  .commission-card { background:var(--card-bg); border:1px solid rgba(0,255,136,0.15); border-radius:14px; padding:24px 20px; margin-bottom:12px; text-align:center; }
-  .commission-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; }
-  .commission-amount { font-family:'Bebas Neue',sans-serif; font-size:64px; color:var(--accent); line-height:1; margin-bottom:6px; }
-  .commission-sub { font-size:12px; color:var(--muted); }
-  .payout-info { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-  .payout-icon { font-size:22px; }
-  .payout-text { font-size:13px; color:var(--muted); line-height:1.6; }
-  .payout-text strong { color:var(--text); display:block; margin-bottom:2px; font-size:14px; }
-  .back-btn { width:100%; background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:10px; padding:12px; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
-  .back-btn:hover { border-color:var(--muted); color:var(--text); }
-
-  @media(max-width:600px) {
-    .hero { padding:60px 0 40px; }
-    .buy-wrapper { padding:36px 20px; }
-    .stats-grid { grid-template-columns:1fr; }
-    .login-box { padding:32px 20px; }
-    .buy-btn-big { padding:16px 32px; font-size:16px; }
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:linear-gradient(rgba(0,255,136,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.02) 1px,transparent 1px);
+    background-size:40px 40px;
+    pointer-events:none;
+    z-index:0;
   }
 
-  /* SUCCESS POPUP */
-  .popup-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; padding:24px; }
-  .popup-box { background:var(--card-bg); border:1px solid rgba(0,255,136,0.3); border-radius:24px; padding:48px 36px; text-align:center; max-width:440px; width:100%; position:relative; }
-  .popup-box::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(90deg,transparent,var(--accent),transparent); border-radius:24px 24px 0 0; }
-  .popup-icon { font-size:64px; margin-bottom:16px; }
-  .popup-title { font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--accent); letter-spacing:2px; margin-bottom:8px; }
-  .popup-sub { font-size:15px; color:var(--muted); margin-bottom:32px; line-height:1.6; }
-  .popup-download-btn { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:16px; padding:16px 40px; border-radius:12px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; margin-bottom:16px; width:100%; justify-content:center; }
-  .popup-download-btn:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,255,136,0.3); }
-  .popup-close { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:13px; padding:10px 24px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; width:100%; }
-  .popup-close:hover { border-color:var(--muted); color:var(--text); }
-  .popup-note { font-size:12px; color:var(--muted); margin-top:16px; font-family:'JetBrains Mono',monospace; }
+  /* LOGIN */
+  .login-screen {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    z-index:1;
+  }
+
+  .login-box {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:48px 40px;
+    width:100%;
+    max-width:400px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .login-box::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  }
+
+  .admin-logo {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:36px;
+    letter-spacing:3px;
+    color:var(--accent);
+    margin-bottom:4px;
+  }
+
+  .admin-logo span { color:var(--text); }
+
+  .admin-subtitle {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:4px;
+    text-transform:uppercase;
+    margin-bottom:40px;
+  }
+
+  .login-input {
+    width:100%;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 18px;
+    color:var(--text);
+    font-size:15px;
+    font-family:'JetBrains Mono',monospace;
+    outline:none;
+    transition:border-color 0.2s;
+    margin-bottom:16px;
+    letter-spacing:2px;
+    text-align:center;
+  }
+
+  .login-input:focus { border-color:rgba(0,255,136,0.4); }
+  .login-input::placeholder { color:var(--muted); letter-spacing:1px; }
+
+  .login-btn {
+    width:100%;
+    background:var(--accent);
+    color:#000;
+    border:none;
+    border-radius:10px;
+    padding:14px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    transition:all 0.2s;
+  }
+
+  .login-btn:hover { background:#00cc6e; transform:translateY(-1px); }
+
+  .login-error {
+    color:var(--red);
+    font-size:13px;
+    font-family:'JetBrains Mono',monospace;
+    margin-top:12px;
+    display:none;
+  }
+
+  .login-error.show { display:block; }
+
+  /* ADMIN DASHBOARD */
+  .admin-screen { display:none; position:relative; z-index:1; }
+  .admin-screen.show { display:block; }
+
+  /* TOP BAR */
+  .topbar {
+    background:rgba(8,8,8,0.95);
+    border-bottom:1px solid var(--border);
+    padding:16px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:100;
+    backdrop-filter:blur(10px);
+  }
+
+  .topbar-logo { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--accent); letter-spacing:2px; }
+  .topbar-logo span { color:var(--text); }
+
+  .topbar-right { display:flex; align-items:center; gap:12px; }
+
+  .live-badge {
+    background:rgba(0,255,136,0.1);
+    border:1px solid rgba(0,255,136,0.3);
+    color:var(--accent);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:2px;
+    padding:4px 12px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .live-badge::before { content:'●'; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  .logout-btn {
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--muted);
+    font-size:12px;
+    padding:6px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+    transition:all 0.2s;
+  }
+
+  .logout-btn:hover { border-color:var(--red); color:var(--red); }
+
+  .refresh-btn {
+    background:transparent;
+    border:1px solid rgba(0,255,136,0.3);
+    color:var(--accent);
+    font-size:12px;
+    padding:6px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+    transition:all 0.2s;
+  }
+
+  .refresh-btn:hover { background:rgba(0,255,136,0.1); }
+
+  /* MAIN CONTENT */
+  .main { padding:24px; max-width:1400px; margin:0 auto; }
+
+  .section-title {
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--accent);
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* STATS CARDS */
+  .stats-row {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    margin-bottom:24px;
+  }
+
+  .stat-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color:rgba(0,255,136,0.2); }
+
+  .stat-card::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+  }
+
+  .stat-card.green::before { background:linear-gradient(90deg,transparent,var(--accent),transparent); }
+  .stat-card.orange::before { background:linear-gradient(90deg,transparent,var(--accent2),transparent); }
+  .stat-card.purple::before { background:linear-gradient(90deg,transparent,var(--accent3),transparent); }
+  .stat-card.yellow::before { background:linear-gradient(90deg,transparent,var(--yellow),transparent); }
+
+  .stat-label {
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+
+  .stat-value {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:42px;
+    line-height:1;
+    margin-bottom:4px;
+  }
+
+  .stat-value.green { color:var(--accent); }
+  .stat-value.orange { color:var(--accent2); }
+  .stat-value.purple { color:var(--accent3); }
+  .stat-value.yellow { color:var(--yellow); }
+
+  .stat-sub { font-size:12px; color:var(--muted); }
+
+  /* TABLES */
+  .table-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:24px;
+  }
+
+  .table-header {
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+
+  .table-title {
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--accent);
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+
+  .table-count {
+    background:rgba(0,255,136,0.1);
+    border:1px solid rgba(0,255,136,0.2);
+    color:var(--accent);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    padding:2px 10px;
+    border-radius:10px;
+  }
+
+  table { width:100%; border-collapse:collapse; }
+
+  th {
+    padding:12px 16px;
+    text-align:left;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:2px;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+    background:var(--surface);
+  }
+
+  td {
+    padding:14px 16px;
+    font-size:13px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+  }
+
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+
+  .badge {
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    padding:3px 10px;
+    border-radius:10px;
+    letter-spacing:1px;
+  }
+
+  .badge-green { background:rgba(0,255,136,0.1); color:var(--accent); border:1px solid rgba(0,255,136,0.2); }
+  .badge-orange { background:rgba(255,107,53,0.1); color:var(--accent2); border:1px solid rgba(255,107,53,0.2); }
+  .badge-red { background:rgba(255,68,68,0.1); color:var(--red); border:1px solid rgba(255,68,68,0.2); }
+  .badge-yellow { background:rgba(255,215,0,0.1); color:var(--yellow); border:1px solid rgba(255,215,0,0.2); }
+
+  .amount-green { color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:600; }
+  .amount-orange { color:var(--accent2); font-family:'JetBrains Mono',monospace; }
+  .ref-code { color:var(--accent3); font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+  .loading-row td { text-align:center; color:var(--muted); padding:32px; font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .payout-btn {
+    background:transparent;
+    border:1px solid rgba(0,255,136,0.3);
+    color:var(--accent);
+    font-size:11px;
+    padding:4px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+    transition:all 0.2s;
+  }
+
+  .payout-btn:hover { background:rgba(0,255,136,0.1); }
+  .payout-btn.paid { border-color:var(--muted); color:var(--muted); cursor:default; }
+
+  .empty-state { text-align:center; padding:40px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+  @media(max-width:768px) {
+    .two-col { grid-template-columns:1fr; }
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+    .main { padding:16px; }
+    th:nth-child(4), td:nth-child(4) { display:none; }
+  }
 </style>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
-<nav>
-  <div class="container">
-    <div class="logo" onclick="showPage('main')">Apex<span>Trade</span></div>
-    <div class="nav-right">
-      <div class="nav-badge">LIVE</div>
-      <button class="affiliate-nav-btn" onclick="showPage('affiliate')">Affiliate Login</button>
-      <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" class="affiliate-nav-btn" style="text-decoration:none;">📱 Telegram</a>
-      <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" class="affiliate-nav-btn" style="text-decoration:none;color:#E1306C;border-color:#E1306C;">📸 Instagram</a>
-    </div>
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="admin-logo">Apex<span>Trade</span></div>
+    <div class="admin-subtitle">Admin Control Panel</div>
+    <input type="password" class="login-input" id="adminPass" placeholder="Enter Admin Password" />
+    <button class="login-btn" onclick="adminLogin()">Access Dashboard →</button>
+    <div class="login-error" id="loginError">❌ Wrong password. Access denied.</div>
   </div>
-</nav>
-
-<!-- MAIN PAGE -->
-<div id="mainPage" class="page active">
-
-  <section class="hero">
-    <div class="container">
-      <div class="hero-tag">Professional Trading Journal</div>
-      <h1>
-        <div>TRACK YOUR</div>
-        <div class="line2">TRADES.</div>
-        <div class="line3">MASTER YOUR EDGE.</div>
-      </h1>
-      <p class="hero-sub">India's <strong>most powerful</strong> trading journal. Track your trades, identify patterns, and achieve consistent profitability.</p>
-    </div>
-  </section>
-
-  <div class="ticker"><div class="ticker-inner" id="tickerInner"></div></div>
-
-  <section class="preview">
-    <div class="container">
-      <div class="preview-intro">
-        <h2>SEE IT IN <span>ACTION</span></h2>
-        <p>A glimpse inside ApexTrade Journal — built for serious traders</p>
-      </div>
-      <div class="preview-tabs">
-        <button class="preview-tab active" onclick="switchPreview(0)">📊 Dashboard</button>
-        <button class="preview-tab" onclick="switchPreview(1)">📈 Analytics</button>
-        <button class="preview-tab" onclick="switchPreview(2)">🔍 Analysis</button>
-        <button class="preview-tab" onclick="switchPreview(3)">🏆 Badges</button>
-      </div>
-      <div class="preview-screen active" id="prev0">
-        <div class="preview-caption"><div class="preview-dot"></div><span>DASHBOARD — Multi-journal overview with real-time P&L stats</span></div>
-        <img src="ss1.png" alt="ApexTrade Dashboard" loading="lazy" />
-      </div>
-      <div class="preview-screen" id="prev1">
-        <div class="preview-caption"><div class="preview-dot"></div><span>ANALYTICS — Equity curve, win/loss chart & key performance metrics</span></div>
-        <img src="ss2.png" alt="ApexTrade Analytics" loading="lazy" />
-      </div>
-      <div class="preview-screen" id="prev2">
-        <div class="preview-caption"><div class="preview-dot"></div><span>ANALYSIS — Track your setups with before & after chart screenshots</span></div>
-        <img src="ss3.png" alt="ApexTrade Analysis" loading="lazy" />
-      </div>
-      <div class="preview-screen" id="prev3">
-        <div class="preview-caption"><div class="preview-dot"></div><span>BADGES & MILESTONES — Gamified trading progression system</span></div>
-        <img src="ss4.png" alt="ApexTrade Badges" loading="lazy" />
-      </div>
-    </div>
-  </section>
-
-  <section class="buy-section">
-    <div class="container">
-      <div class="buy-wrapper">
-
-        <div class="urgency-bar">🔥 LIMITED TIME OFFER — ENDS SOON</div>
-
-        <div class="compare-table">
-          <div class="compare-row compare-header">
-            <div class="compare-feature"></div>
-            <div class="compare-them">Others</div>
-            <div class="compare-us">ApexTrade</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-feature">Trading Journal</div>
-            <div class="compare-them">₹2,000+/yr</div>
-            <div class="compare-us">✓</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-feature">AI Coach</div>
-            <div class="compare-them">₹3,000+/yr</div>
-            <div class="compare-us">✓</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-feature">Analytics Dashboard</div>
-            <div class="compare-them">₹1,500+/yr</div>
-            <div class="compare-us">✓</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-feature">Works Offline</div>
-            <div class="compare-them cross">✗</div>
-            <div class="compare-us">✓</div>
-          </div>
-          <div class="compare-row compare-total">
-            <div class="compare-feature">Total Value</div>
-            <div class="compare-them">₹6,500+/yr</div>
-            <div class="compare-us">₹599 ONCE</div>
-          </div>
-        </div>
-
-        <div class="price-block">
-          <div class="price-was">Market Price <span>₹999</span></div>
-          <div class="price-now">
-            <div class="price-big">₹599</div>
-            <div class="price-tag-right">
-              <div class="off-badge">40% OFF</div>
-              <div class="price-save">Save ₹400</div>
-            </div>
-          </div>
-          <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
-        </div>
-
-        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹599</button>
-        <div style="margin:12px 0;display:flex;align-items:center;gap:12px;justify-content:center;">
-          <div style="flex:1;height:1px;background:var(--border);"></div>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;">OR</span>
-          <div style="flex:1;height:1px;background:var(--border);"></div>
-        </div>
-        <button class="crypto-btn" onclick="openCryptoCheckout()">₿ Pay with Crypto — $2 USDT</button>
-        <div class="ref-badge" id="refBadge"></div>
-
-        <div class="trust-row">
-          <span>🔒 Secure Payment</span>
-          <span>📦 Instant Access</span>
-          <span>♾️ Free Updates</span>
-          <span>✅ No Subscription</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <section class="features">
-    <div class="container">
-      <div class="section-label">Features</div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">📊</div>
-          <h3>Multi-Journal Dashboard</h3>
-          <p>Manage multiple trading journals in one place. Track Net P&L, Win Rate, Avg R:R, Profit Factor and Max Drawdown — all in real time.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📈</div>
-          <h3>Deep Analytics</h3>
-          <p>Equity curve, Win vs Loss chart, Best/Worst trade, Win streak, Loss streak, Expectancy — every metric a serious trader needs.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🤖</div>
-          <h3>AI Trade Coach</h3>
-          <p>Get personalized AI feedback after every trade. Identifies patterns like FOMO, revenge trading, and early exits — and tells you how to fix them.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Prop Firm Challenge Tracker</h3>
-          <p>Track your funded account challenges with daily loss limits, max drawdown rules, and profit targets — built for HFT and prop traders.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔍</div>
-          <h3>Setup Analysis Board</h3>
-          <p>Log your trade setups with Before & After chart screenshots. Track Success, Failed and Pending setups with accuracy percentage.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🏆</div>
-          <h3>Badges & Milestones</h3>
-          <p>Gamified trading progression — earn XP, unlock badges and level up from Novice to Legend. Stay motivated and consistent.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📂</div>
-          <h3>MT5 CSV Import</h3>
-          <p>Import your trades directly from XM Global and other MT5 brokers via CSV. Zero manual entry — your history syncs instantly.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📅</div>
-          <h3>Forex Factory Calendar</h3>
-          <p>Built-in economic calendar integration. Never miss a high-impact news event — plan your trades around the market.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <h3>100% Private & Offline</h3>
-          <p>No cloud, no server, no subscription. All data stored locally on your device. Works completely offline — your trades stay yours.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="stats">
-    <div class="container">
-      <div class="section-label">Why It Works</div>
-      <div class="stats-grid">
-        <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Color Themes</div></div>
-        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Trade Entries</div></div>
-        <div class="stat-item"><div class="stat-num">₹599</div><div class="stat-label">One Time Only</div></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="comparison">
-    <div class="container">
-      <div class="comparison-intro">
-        <h2>WHY <span>APEXTRADE</span> WINS</h2>
-        <p>Compare us with the top trading journals in the market</p>
-      </div>
-      <div class="comp-table-wrap">
-        <table class="comp-table">
-          <thead>
-            <tr>
-              <th style="text-align:left;">Feature</th>
-              <th class="apex-col">ApexTrade <span class="comp-badge">YOU</span></th>
-              <th>TraderSync</th>
-              <th>Edgewonk</th>
-              <th>Tradervue</th>
-              <th>TradeZella</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>💰 Price</td>
-              <td class="apex-col"><span class="price-highlight">₹599</span><br><small style="color:var(--muted);font-size:11px;">One Time Forever</small></td>
-              <td><span class="price-muted">$29–$80/mo</span><br><small style="font-size:11px;">₹2,500–₹6,700/mo</small></td>
-              <td><span class="price-muted">$197/year</span><br><small style="font-size:11px;">₹16,500/year</small></td>
-              <td><span class="price-muted">$29–$49/mo</span><br><small style="font-size:11px;">₹2,400–₹4,100/mo</small></td>
-              <td><span class="price-muted">$29–$49/mo</span><br><small style="font-size:11px;">₹2,400–₹4,100/mo</small></td>
-            </tr>
-            <tr>
-              <td>🤖 AI Trade Coach</td>
-              <td class="apex-col"><span class="check">✓</span> Included</td>
-              <td>Elite only ($80/mo)</td>
-              <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
-              <td>All plans</td>
-            </tr>
-            <tr>
-              <td>📊 Advanced Analytics</td>
-              <td class="apex-col"><span class="check">✓</span> Full</td>
-              <td><span class="check">✓</span> Full</td>
-              <td><span class="check">✓</span> Full</td>
-              <td>Limited</td>
-              <td><span class="check">✓</span> Full</td>
-            </tr>
-            <tr>
-              <td>⚡ Prop Firm Tracker</td>
-              <td class="apex-col"><span class="check">✓</span> Built-in</td>
-              <td>Premium only</td>
-              <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
-              <td><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>🔍 Setup Analysis</td>
-              <td class="apex-col"><span class="check">✓</span> With Screenshots</td>
-              <td>Limited</td>
-              <td><span class="check">✓</span></td>
-              <td><span class="cross">✗</span></td>
-              <td>Limited</td>
-            </tr>
-            <tr>
-              <td>🏆 Badges & Gamification</td>
-              <td class="apex-col"><span class="check">✓</span> Built-in</td>
-              <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
-              <td><span class="cross">✗</span></td>
-            </tr>
-            <tr>
-              <td>📂 MT5 CSV Import</td>
-              <td class="apex-col"><span class="check">✓</span> MT5 Brokers</td>
-              <td>700+ brokers</td>
-              <td>MT4/MT5 only</td>
-              <td>80+ brokers</td>
-              <td>500+ brokers</td>
-            </tr>
-            <tr>
-              <td>📱 Works Offline</td>
-              <td class="apex-col"><span class="check">✓</span> 100% Offline</td>
-              <td><span class="cross">✗</span> Cloud only</td>
-              <td><span class="cross">✗</span> Cloud only</td>
-              <td><span class="cross">✗</span> Cloud only</td>
-              <td><span class="cross">✗</span> Cloud only</td>
-            </tr>
-            <tr>
-              <td>🔒 Data Privacy</td>
-              <td class="apex-col"><span class="check">✓</span> Local Device</td>
-              <td>Cloud stored</td>
-              <td>Cloud stored</td>
-              <td>Cloud stored</td>
-              <td>Cloud stored</td>
-            </tr>
-            <tr>
-              <td>🇮🇳 Indian Rupee (₹)</td>
-              <td class="apex-col"><span class="check">✓</span> Native INR</td>
-              <td><span class="cross">✗</span> USD only</td>
-              <td><span class="cross">✗</span> USD only</td>
-              <td><span class="cross">✗</span> USD only</td>
-              <td><span class="cross">✗</span> USD only</td>
-            </tr>
-            <tr>
-              <td>💵 3 Year Total Cost</td>
-              <td class="apex-col"><span class="price-highlight">₹599</span></td>
-              <td><span class="price-muted">₹90,000+</span></td>
-              <td><span class="price-muted">₹49,500</span></td>
-              <td><span class="price-muted">₹87,000+</span></td>
-              <td><span class="price-muted">₹87,000+</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section class="testimonials">
-    <div class="container">
-      <div class="section-label">What Traders Say</div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"Finally a journal that actually helps me see where I'm losing money. The analytics are insane for this price."</p>
-          <div class="testimonial-author"><div class="author-avatar">🧑</div><div><div class="author-name">Rahul M.</div><div class="author-role">Intraday Trader, Mumbai</div></div></div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"The AI coach feature is a game changer. It spotted my revenge trading pattern within the first week."</p>
-          <div class="testimonial-author"><div class="author-avatar">👩</div><div><div class="author-name">Priya S.</div><div class="author-role">Options Trader, Bangalore</div></div></div>
-        </div>
-        <div class="testimonial-card">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">"Best ₹599 I've spent on trading. My win rate went from 42% to 58% in 2 months of consistent journaling."</p>
-          <div class="testimonial-author"><div class="author-avatar">🧔</div><div><div class="author-name">Vikram T.</div><div class="author-role">Forex Trader, Delhi</div></div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="faq">
-    <div class="container">
-      <div class="section-label">FAQ</div>
-      <div class="faq-list">
-        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is this a one-time payment or subscription?<span class="arrow">+</span></button><div class="faq-answer">100% one-time payment of ₹599. No monthly fees, no hidden charges. Pay once, use forever.</div></div>
-        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">What format is the journal — app or website?<span class="arrow">+</span></button><div class="faq-answer">It's a single HTML file that works in any browser. You can also install it as a PWA on your phone for an app-like experience.</div></div>
-        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is my trading data safe?<span class="arrow">+</span></button><div class="faq-answer">Completely. All data is stored locally on your device. Nothing is uploaded to any server — your trades stay private.</div></div>
-        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Which brokers are supported for CSV import?<span class="arrow">+</span></button><div class="faq-answer">XM Global MT5 is fully supported. Manual entry works for all brokers. More broker integrations coming soon.</div></div>
-        <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Do I get future updates after purchase?<span class="arrow">+</span></button><div class="faq-answer">Yes! All future updates are free for lifetime customers. You'll receive the updated file directly.</div></div>
-      </div>
-    </div>
-  </section>
-
-  <section style="padding:60px 0;border-top:1px solid var(--border);">
-    <div class="container">
-      <div class="section-label">Contact & Support</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
-        <div class="feature-card" style="text-align:center;">
-          <div class="feature-icon">📱</div>
-          <h3>Telegram</h3>
-          <p style="margin-bottom:16px;">Join our Telegram for support, updates and trading tips.</p>
-          <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" style="display:inline-block;background:var(--accent);color:#000;font-weight:700;font-size:13px;padding:10px 24px;border-radius:8px;text-decoration:none;font-family:'DM Sans',sans-serif;">Join Telegram →</a>
-        </div>
-        <div class="feature-card" style="text-align:center;">
-          <div class="feature-icon">📸</div>
-          <h3>Instagram</h3>
-          <p style="margin-bottom:16px;">Follow us on Instagram for trading content and journal updates.</p>
-          <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" style="display:inline-block;background:#E1306C;color:#fff;font-weight:700;font-size:13px;padding:10px 24px;border-radius:8px;text-decoration:none;font-family:'DM Sans',sans-serif;">Follow Instagram →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <p>Made with ❤️ for <span class="accent">Traders</span> &nbsp;•&nbsp; ApexTrade Journal &nbsp;•&nbsp; <span class="accent">Lifetime Access</span></p>
-      <div class="footer-affiliate"><button onclick="showPage('affiliate')">Affiliate? Login here →</button></div>
-    </div>
-  </footer>
-
 </div>
 
-<!-- AFFILIATE PAGE -->
-<div id="affiliatePage" class="page">
-  <div class="dash-wrapper">
-    <div class="login-box" id="loginBox">
-      <div class="logo" style="font-size:26px;margin-bottom:4px;">Apex<span style="color:var(--text)">Trade</span></div>
-      <div class="dash-logo-sub">Affiliate Dashboard</div>
-      <div class="input-group">
-        <label>Your Referral Code</label>
-        <input type="text" id="refInput" placeholder="e.g. rahul" autocomplete="off" />
-      </div>
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="off" />
-      </div>
-      <button class="check-btn" id="checkBtn" onclick="checkStats()">View Dashboard →</button>
-      <div class="dash-loading" id="dashLoading">Loading... ⏳</div>
-      <div class="error-msg" id="errorMsg">❌ Network error. Please try again.</div>
+<!-- ADMIN DASHBOARD -->
+<div class="admin-screen" id="adminScreen">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">Apex<span>Trade</span> <span style="font-size:14px;color:var(--muted);letter-spacing:1px;">ADMIN</span></div>
+    <div class="topbar-right">
+      <div class="live-badge">LIVE DATA</div>
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+      <button class="logout-btn" onclick="adminLogout()">Logout</button>
     </div>
-    <div class="affiliate-dashboard" id="affiliateDash">
-      <div class="dash-header-bar">
-        <div class="dash-logo2">Apex<span>Trade</span></div>
-        <div class="live-dot">LIVE DATA</div>
+  </div>
+
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="section-title">Overview</div>
+    <div class="stats-row">
+      <div class="stat-card green">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value green" id="totalRevenue">—</div>
+        <div class="stat-sub">All time sales</div>
       </div>
-      <div class="ref-info-bar">
-        <div><div class="ref-label">Your Ref Code</div><div class="ref-code-disp" id="displayRef">—</div></div>
-        <button class="copy-link-btn" id="copyBtn" onclick="copyLink()">📋 Copy Link</button>
+      <div class="stat-card orange">
+        <div class="stat-label">Total Sales</div>
+        <div class="stat-value orange" id="totalSales">—</div>
+        <div class="stat-sub">Completed orders</div>
       </div>
-      <div class="dash-stats-grid">
-        <div class="dash-stat-card"><div class="dash-stat-num green" id="totalSales">0</div><div class="dash-stat-label">Total Sales</div></div>
-        <div class="dash-stat-card"><div class="dash-stat-num orange">₹210</div><div class="dash-stat-label">Per Sale</div></div>
+      <div class="stat-card purple">
+        <div class="stat-label">Commission Paid</div>
+        <div class="stat-value purple" id="totalCommission">—</div>
+        <div class="stat-sub">To influencers</div>
       </div>
-      <div class="commission-card">
-        <div class="commission-label">Total Commission Earned</div>
-        <div class="commission-amount" id="totalCommission">₹0</div>
-        <div class="commission-sub">35% of ₹599 per sale</div>
+      <div class="stat-card yellow">
+        <div class="stat-label">Active Affiliates</div>
+        <div class="stat-value yellow" id="totalAffiliates">—</div>
+        <div class="stat-sub">With sales</div>
       </div>
-      <div class="payout-info">
-        <div class="payout-icon">💸</div>
-        <div class="payout-text"><strong>Payout Schedule</strong>Payouts on the 1st of every month via UPI/Bank Transfer. Minimum 1 sale (₹210).</div>
+      <div class="stat-card green">
+        <div class="stat-label">Net Earnings</div>
+        <div class="stat-value green" id="netEarnings">—</div>
+        <div class="stat-sub">After commission</div>
       </div>
-      <div class="payout-info" style="margin-top:12px;">
-        <div class="payout-icon">💬</div>
-        <div class="payout-text">
-          <strong>Contact & Support</strong>
-          For payout queries or support, reach us on Telegram.
-          <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-top:4px;">📱 t.me/APEXTRADEJOURNEL →</a>
-          <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" style="color:#E1306C;font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-top:4px;">📸 instagram.com/apexjournel →</a>
+    </div>
+
+    <div class="two-col">
+      <!-- AFFILIATES TABLE -->
+      <div>
+        <div class="section-title">Affiliates</div>
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">Influencer Performance</div>
+            <div class="table-count" id="affiliateCount">0</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Ref Code</th>
+                <th>Sales</th>
+                <th>Commission</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="affiliateTable">
+              <tr class="loading-row"><td colspan="5">Loading...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-      <button class="back-btn" onclick="logoutAffiliate()">← Back to Website</button>
+
+      <!-- RECENT SALES -->
+      <div>
+        <div class="section-title">Recent Sales</div>
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">Transaction History</div>
+            <div class="table-count" id="salesCount">0</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Ref</th>
+                <th>Commission</th>
+              </tr>
+            </thead>
+            <tbody id="salesTable">
+              <tr class="loading-row"><td colspan="4">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>
 
 <script>
-  const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
+  const ADMIN_PASSWORD = "Apexadminzin98";
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyym2krNttTcCDS7kcVFbD5XEmn_-qG5DB4EbiXamY82SJYB1bGf_0-rqE5Myikxt21/exec";
-  const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
-  let currentRef = '';
+  const SHEET_ID = "1KXuCu90NXsjJrRWOnp0bVZ8zr_9kesVB_cFpy_F6sD8";
 
-  function showPage(page) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(page + 'Page').classList.add('active');
-    window.scrollTo(0, 0);
-  }
-
-  function getRefCode() {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
-    if (ref) { localStorage.setItem('apextrade_ref', ref); return ref; }
-    return localStorage.getItem('apextrade_ref') || null;
-  }
-
-  function setupBuyButton() {
-    const ref = getRefCode();
-    const badge = document.getElementById('refBadge');
-    if (ref && badge) {
-      badge.textContent = `🤝 Referred by: ${ref}`;
-      badge.classList.add('show');
+  // LOGIN
+  function adminLogin() {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === ADMIN_PASSWORD) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminScreen').classList.add('show');
+      loadData();
+    } else {
+      document.getElementById('loginError').classList.add('show');
+      document.getElementById('adminPass').value = '';
     }
   }
 
-  async function openCryptoCheckout() {
-    const ref = getRefCode() || 'direct';
-    const btn = document.querySelector('.crypto-btn');
-    const original = btn.innerHTML;
-    btn.innerHTML = '⏳ Creating payment...';
-    btn.disabled = true;
+  function adminLogout() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminScreen').classList.remove('show');
+    document.getElementById('adminPass').value = '';
+    document.getElementById('loginError').classList.remove('show');
+  }
+
+  document.getElementById('adminPass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') adminLogin();
+  });
+
+  // LOAD DATA via Apps Script
+  async function loadData() {
     try {
-      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref));
-      const text = await res.text();
-      const data = JSON.parse(text);
-      if (data.invoice_url) {
-        localStorage.setItem('apextrade_ref', ref);
-        window.location.href = data.invoice_url;
-      } else {
-        alert('Error creating crypto payment. Please try again.');
-        btn.innerHTML = original;
-        btn.disabled = false;
-      }
+      // Load affiliates
+      await loadAffiliates();
+      // Load sales
+      await loadSales();
     } catch(err) {
-      alert('Error: ' + err.message);
-      btn.innerHTML = original;
-      btn.disabled = false;
+      console.error('Error loading data:', err);
     }
   }
 
-  function openCheckout() {
-    const ref = getRefCode() || 'direct';
-    const options = {
-      key: 'rzp_live_SkrgYaCjB5ymU3',
-      amount: 59900, // ₹599
-      currency: 'INR',
-      name: 'ApexTrade Journal',
-      description: 'Lifetime Access',
-      image: '',
-      handler: function(response) {
-        const amount = options.amount / 100;
-        const commission = parseFloat((amount * 0.35).toFixed(2));
-        fetch('https://script.google.com/macros/s/AKfycbyym2krNttTcCDS7kcVFbD5XEmn_-qG5DB4EbiXamY82SJYB1bGf_0-rqE5Myikxt21/exec', {
-          method: 'POST',
-          body: JSON.stringify({
-            event: 'payment.captured',
-            payload: {
-              payment: {
-                entity: {
-                  id: response.razorpay_payment_id,
-                  amount: options.amount,
-                  email: 'customer@email.com',
-                  notes: { ref: ref }
-                }
-              }
-            }
-          })
-        });
-        document.getElementById('successPopup').style.display = 'flex'; window._paymentSuccess = true;
-      },
-      prefill: { name: '', email: '', contact: '' },
-      notes: { ref: ref },
-      theme: { color: '#00ff88' }
-    };
-    const rzp = new Razorpay(options);
-    rzp.on('payment.failed', function(response) {
-      alert('Payment Failed: ' + JSON.stringify(response.error));
-    });
-    rzp.open();
-  }
+  async function loadAffiliates() {
+    // Get all affiliates from sheet via Apps Script
+    const res = await fetch(`${SCRIPT_URL}?action=getAffiliates`);
+    const data = await res.json();
 
-  function setupTicker() {
-    const items = ['NIFTY 50','BANKNIFTY','GOLD','CRUDE OIL','EURUSD','XAUUSD','GBPINR','USDINR','RELIANCE','TCS','HDFC','INFY','WIN RATE ↑','DRAWDOWN ↓','RR 1:3','CONSISTENCY ✓'];
-    const ticker = document.getElementById('tickerInner');
-    const all = [...items,...items,...items,...items];
-    ticker.innerHTML = all.map(i => `<div class="ticker-item"><span>●</span>${i}</div>`).join('');
-  }
+    if (!data.affiliates) return;
 
-  function switchPreview(idx) {
-    document.querySelectorAll('.preview-screen').forEach((s,i) => s.classList.toggle('active', i===idx));
-    document.querySelectorAll('.preview-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
-  }
+    const affiliates = data.affiliates;
+    const tbody = document.getElementById('affiliateTable');
+    document.getElementById('affiliateCount').textContent = affiliates.length;
 
-  function toggleFaq(btn) {
-    btn.classList.toggle('open');
-    btn.nextElementSibling.classList.toggle('open');
-  }
-
-  async function checkStats() {
-    const ref = document.getElementById('refInput').value.trim().toLowerCase();
-    const password = document.getElementById('passwordInput').value.trim();
-    if (!ref || !password) return;
-    document.getElementById('checkBtn').disabled = true;
-    document.getElementById('dashLoading').classList.add('show');
-    document.getElementById('errorMsg').classList.remove('show');
-    try {
-      const res = await fetch(`${SCRIPT_URL}?ref=${ref}&password=${encodeURIComponent(password)}`);
-      const data = await res.json();
-      if (!data.valid) {
-        if(data.wrongPassword) {
-          document.getElementById('errorMsg').textContent = '❌ Wrong password. Please try again.';
-        } else {
-          document.getElementById('errorMsg').textContent = '❌ Invalid referral code. Please check and try again.';
-        }
-        document.getElementById('errorMsg').classList.add('show');
-      } else {
-        currentRef = ref;
-        showDashboard(data);
-      }
-    } catch(err) {
-      document.getElementById('errorMsg').textContent = '❌ Network error. Please try again.';
-      document.getElementById('errorMsg').classList.add('show');
+    if (affiliates.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No affiliates yet</td></tr>';
+      return;
     }
-    document.getElementById('dashLoading').classList.remove('show');
-    document.getElementById('checkBtn').disabled = false;
+
+    let totalComm = 0;
+    let activeCount = 0;
+
+    tbody.innerHTML = affiliates.map(a => {
+      totalComm += a.commission || 0;
+      if (a.sales > 0) activeCount++;
+      return `
+        <tr>
+          <td><strong>${a.name}</strong></td>
+          <td><span class="ref-code">${a.refCode}</span></td>
+          <td><span class="badge ${a.sales > 0 ? 'badge-green' : 'badge-orange'}">${a.sales}</span></td>
+          <td><span class="amount-orange">₹${(a.commission || 0).toFixed(2)}</span></td>
+          <td><span class="badge ${a.sales > 0 ? 'badge-green' : 'badge-yellow'}">${a.sales > 0 ? 'ACTIVE' : 'PENDING'}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    document.getElementById('totalCommission').textContent = '₹' + totalComm.toFixed(0);
+    document.getElementById('totalAffiliates').textContent = activeCount;
   }
 
-  function showDashboard(data) {
-    document.getElementById('loginBox').style.display = 'none';
-    document.getElementById('affiliateDash').classList.add('show');
-    document.getElementById('displayRef').textContent = data.name ? data.name + ' (' + (data.ref || currentRef) + ')' : (data.ref || currentRef);
-    document.getElementById('totalSales').textContent = data.totalSales || 0;
-    document.getElementById('totalCommission').textContent = `₹${data.totalCommission || 0}`;
+  async function loadSales() {
+    const res = await fetch(`${SCRIPT_URL}?action=getSales`);
+    const data = await res.json();
+
+    if (!data.sales) return;
+
+    const sales = data.sales;
+    const tbody = document.getElementById('salesTable');
+    document.getElementById('salesCount').textContent = sales.length;
+
+    if (sales.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No sales yet</td></tr>';
+      return;
+    }
+
+    let totalRev = 0;
+    let totalComm = 0;
+
+    tbody.innerHTML = sales.slice().reverse().slice(0, 20).map(s => {
+      totalRev += s.amount || 0;
+      totalComm += s.commission || 0;
+      const date = new Date(s.timestamp);
+      const dateStr = `${date.getDate()}/${date.getMonth()+1} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
+      return `
+        <tr>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);">${dateStr}</td>
+          <td><span class="amount-green">₹${s.amount}</span></td>
+          <td><span class="ref-code">${s.refCode || 'direct'}</span></td>
+          <td><span class="amount-orange">₹${(s.commission || 0).toFixed(2)}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    // Calculate all sales totals
+    const allSalesRes = await fetch(`${SCRIPT_URL}?action=getSales`);
+    const allData = await allSalesRes.json();
+    if (allData.sales) {
+      let allRev = 0, allComm = 0;
+      allData.sales.forEach(s => { allRev += s.amount || 0; allComm += s.commission || 0; });
+      document.getElementById('totalRevenue').textContent = '₹' + allRev.toFixed(0);
+      document.getElementById('totalSales').textContent = allData.sales.length;
+      document.getElementById('netEarnings').textContent = '₹' + (allRev - allComm).toFixed(0);
+    }
   }
 
-  function copyLink() {
-    const link = `${WEBSITE_URL}?ref=${currentRef}`;
-    navigator.clipboard.writeText(link).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => btn.textContent = '📋 Copy Link', 2000);
-    });
-  }
-
-  function logoutAffiliate() {
-    document.getElementById('loginBox').style.display = 'block';
-    document.getElementById('affiliateDash').classList.remove('show');
-    document.getElementById('refInput').value = '';
-    currentRef = '';
-    showPage('main');
-  }
-
-  document.getElementById('refInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkStats(); });
-  document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkStats(); });
-
-  setupBuyButton();
-  setupTicker();
-  if(new URLSearchParams(window.location.search).get('crypto_success') === '1') {
-    setTimeout(() => {
-      document.getElementById('successPopup').style.display = 'flex';
-    }, 500);
-  }
-  // Show download popup only if ?download=1 in URL (Razorpay redirect)
-  const urlParams = new URLSearchParams(window.location.search);
-  if(urlParams.get('download') === '1') {
-    setTimeout(() => {
-      document.getElementById('successPopup').style.display = 'flex';
-    }, 500);
-  }
-  if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
+  // Auto refresh every 30 seconds
+  setInterval(() => {
+    if (document.getElementById('adminScreen').classList.contains('show')) {
+      loadData();
+    }
+  }, 30000);
 </script>
-
-<!-- SUCCESS POPUP -->
-<div class="popup-overlay" id="successPopup">
-  <div class="popup-box">
-    <div class="popup-icon">🎉</div>
-    <div class="popup-title">PAYMENT SUCCESSFUL!</div>
-    <div class="popup-sub">Thank you for purchasing ApexTrade Journal!<br>Your lifetime access is ready to download.</div>
-    <a href="apex-journal.html" download="ApexTrade-Journal.html" class="popup-download-btn">
-      ⬇️ Download ApexTrade Journal
-    </a>
-    <button class="popup-close" onclick="document.getElementById('successPopup').style.display='none'">
-      Close
-    </button>
-    <div class="popup-note">📌 Save the file to your device for lifetime access</div>
-  </div>
-</div>
-
 </body>
 </html>
