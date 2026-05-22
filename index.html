@@ -769,6 +769,25 @@
       description: 'Lifetime Access',
       image: '',
       handler: function(response) {
+        // Send to Google Sheet
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            event: 'payment.captured',
+            payload: {
+              payment: {
+                entity: {
+                  id: response.razorpay_payment_id,
+                  amount: options.amount,
+                  email: 'customer@email.com',
+                  notes: { ref: ref }
+                }
+              }
+            }
+          })
+        }).catch(function(err) { console.log('Sheet error:', err); });
+        // Show download popup
         document.getElementById('successPopup').style.display = 'flex';
       },
       prefill: { name: '', email: '', contact: '' },
