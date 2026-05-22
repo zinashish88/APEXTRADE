@@ -78,8 +78,6 @@
   .buy-sub { font-size:14px; color:var(--muted); margin-bottom:36px; }
   .buy-btn-big { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:18px; padding:18px 56px; border-radius:14px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; }
   .buy-btn-big:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 16px 48px rgba(0,255,136,0.3); }
-  .crypto-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#f7931a,#e8a400); color:#000; font-weight:700; font-size:16px; padding:16px 48px; border-radius:14px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; width:100%; transition:all 0.2s; }
-  .crypto-btn:hover { transform:translateY(-2px); box-shadow:0 16px 48px rgba(247,147,26,0.3); opacity:0.9; }
   .ref-badge { margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.15); padding:6px 16px; border-radius:20px; display:none; }
   .ref-badge.show { display:block; }
   .buy-features { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-top:24px; }
@@ -379,12 +377,6 @@
         </div>
 
         <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹599</button>
-        <div style="margin:12px 0;display:flex;align-items:center;gap:12px;justify-content:center;">
-          <div style="flex:1;height:1px;background:var(--border);"></div>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;">OR</span>
-          <div style="flex:1;height:1px;background:var(--border);"></div>
-        </div>
-        <button class="crypto-btn" onclick="openCryptoCheckout()">₿ Pay with Crypto — $2 USDT</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -709,31 +701,6 @@
     }
   }
 
-  async function openCryptoCheckout() {
-    const ref = getRefCode() || 'direct';
-    const btn = document.querySelector('.crypto-btn');
-    const original = btn.innerHTML;
-    btn.innerHTML = '⏳ Creating payment...';
-    btn.disabled = true;
-    try {
-      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref));
-      const text = await res.text();
-      const data = JSON.parse(text);
-      if (data.invoice_url) {
-        localStorage.setItem('apextrade_ref', ref);
-        window.location.href = data.invoice_url;
-      } else {
-        alert('Error creating crypto payment. Please try again.');
-        btn.innerHTML = original;
-        btn.disabled = false;
-      }
-    } catch(err) {
-      alert('Error: ' + err.message);
-      btn.innerHTML = original;
-      btn.disabled = false;
-    }
-  }
-
   function openCheckout() {
     const ref = getRefCode() || 'direct';
     const options = {
@@ -836,11 +803,6 @@
 
   setupBuyButton();
   setupTicker();
-  if(new URLSearchParams(window.location.search).get('crypto_success') === '1') {
-    setTimeout(() => {
-      document.getElementById('successPopup').style.display = 'flex';
-    }, 500);
-  }
   // Show download popup only if ?download=1 in URL (Razorpay redirect)
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('download') === '1') {
