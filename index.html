@@ -279,6 +279,8 @@
           <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:#f0f0f0;font-size:14px;">📸 Instagram</a>
         </div>
       </div>
+      <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" class="affiliate-nav-btn" style="text-decoration:none;">📱 Telegram</a>
+      <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" class="affiliate-nav-btn" style="text-decoration:none;color:#E1306C;border-color:#E1306C;">📸 Instagram</a>
     </div>
   </div>
 </nav>
@@ -769,10 +771,10 @@
       description: 'Lifetime Access',
       image: '',
       handler: function(response) {
-        // Send to Google Sheet
-        fetch(SCRIPT_URL, {
+        const amount = options.amount / 100;
+        const commission = parseFloat((amount * 0.35).toFixed(2));
+        fetch('https://script.google.com/macros/s/AKfycbyym2krNttTcCDS7kcVFbD5XEmn_-qG5DB4EbiXamY82SJYB1bGf_0-rqE5Myikxt21/exec', {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             event: 'payment.captured',
             payload: {
@@ -786,9 +788,8 @@
               }
             }
           })
-        }).catch(function(err) { console.log('Sheet error:', err); });
-        // Show download popup
-        document.getElementById('successPopup').style.display = 'flex';
+        });
+        document.getElementById('successPopup').style.display = 'flex'; window._paymentSuccess = true;
       },
       prefill: { name: '', email: '', contact: '' },
       notes: { ref: ref },
