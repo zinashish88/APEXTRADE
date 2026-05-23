@@ -33,12 +33,6 @@
   .hero-tag { display:inline-flex; align-items:center; gap:8px; background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); color:var(--accent); font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:8px 20px; border-radius:30px; margin-bottom:36px; font-family:'JetBrains Mono',monospace; }
   .hero-tag::before { content:'●'; animation:pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .social-proof-bar { display:inline-flex; align-items:center; gap:16px; background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.15); border-radius:30px; padding:8px 20px; margin-bottom:24px; }
-  .sp-item { display:flex; align-items:center; gap:6px; }
-  .sp-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
-  .sp-num { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--accent); }
-  .sp-label { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-  .sp-divider { color:var(--border); font-size:16px; }
   .hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(56px,10vw,110px); line-height:0.9; letter-spacing:2px; margin-bottom:28px; }
   .hero h1 .line2 { color:var(--accent); }
   .hero h1 .line3 { color:var(--muted); font-size:0.6em; }
@@ -84,7 +78,9 @@
   .buy-sub { font-size:14px; color:var(--muted); margin-bottom:36px; }
   .buy-btn-big { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:18px; padding:18px 56px; border-radius:14px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; }
   .buy-btn-big:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 16px 48px rgba(0,255,136,0.3); }
-
+  .crypto-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#26a17b,#1a7a5e); color:#fff; font-weight:700; font-size:16px; padding:16px 48px; border-radius:14px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; width:100%; transition:all 0.2s; }
+  .crypto-btn:hover { transform:translateY(-2px); box-shadow:0 16px 48px rgba(38,161,123,0.3); opacity:0.9; }
+  .crypto-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
   .ref-badge { margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.15); padding:6px 16px; border-radius:20px; display:none; }
   .ref-badge.show { display:block; }
   .buy-features { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-top:24px; }
@@ -192,68 +188,6 @@
   .footer-affiliate { margin-top:12px; }
   .footer-affiliate button { background:none; border:none; color:var(--muted); cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:11px; text-decoration:underline; text-underline-offset:3px; letter-spacing:1px; }
   .footer-affiliate button:hover { color:var(--accent); }
-  .footer-links { margin-top:16px; display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:center; }
-  .footer-links button { background:none; border:none; color:var(--muted); cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; padding:0; transition:color 0.2s; }
-  .footer-links button:hover { color:var(--accent); }
-
-  /* INNER PAGES (pricing, contact, policy pages) */
-  .inner-page { padding:80px 0 60px; min-height:calc(100vh - 70px); }
-  .inner-page .page-header { text-align:center; margin-bottom:60px; }
-  .inner-page .page-header h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(40px,8vw,80px); letter-spacing:2px; margin-bottom:12px; }
-  .inner-page .page-header h1 span { color:var(--accent); }
-  .inner-page .page-header p { font-size:16px; color:var(--muted); max-width:500px; margin:0 auto; line-height:1.7; }
-  .inner-back-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; padding:8px 18px; border-radius:8px; cursor:pointer; font-family:'JetBrains Mono',monospace; letter-spacing:1px; transition:all 0.2s; margin-bottom:40px; display:inline-flex; align-items:center; gap:6px; }
-  .inner-back-btn:hover { border-color:var(--accent); color:var(--accent); }
-
-  /* PRICING PAGE */
-  .pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; max-width:900px; margin:0 auto; }
-  .pricing-card { background:var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:36px 28px; text-align:center; position:relative; transition:border-color 0.2s; }
-  .pricing-card:hover { border-color:rgba(0,255,136,0.3); }
-  .pricing-card.featured { border-color:rgba(0,255,136,0.4); }
-  .pricing-card.featured::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--accent),transparent); border-radius:20px 20px 0 0; }
-  .pricing-badge-pill { display:inline-block; background:var(--accent); color:#000; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; letter-spacing:2px; padding:4px 14px; border-radius:20px; margin-bottom:20px; }
-  .pricing-name { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:2px; margin-bottom:8px; color:var(--text); }
-  .pricing-desc { font-size:13px; color:var(--muted); margin-bottom:24px; line-height:1.6; }
-  .pricing-amount { font-family:'Bebas Neue',sans-serif; font-size:64px; color:var(--accent); line-height:1; margin-bottom:4px; }
-  .pricing-amount span { font-size:28px; color:var(--muted); font-family:'JetBrains Mono',monospace; vertical-align:middle; }
-  .pricing-billing { font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:28px; }
-  .pricing-features-list { list-style:none; text-align:left; margin-bottom:32px; display:flex; flex-direction:column; gap:12px; }
-  .pricing-features-list li { font-size:14px; color:var(--text); display:flex; align-items:flex-start; gap:10px; }
-  .pricing-features-list li::before { content:'✓'; color:var(--accent); font-weight:700; flex-shrink:0; margin-top:1px; }
-  .pricing-features-list li.no::before { content:'✗'; color:#ff4444; }
-  .pricing-features-list li.no { color:var(--muted); }
-  .pricing-cta { display:block; width:100%; background:var(--accent); color:#000; border:none; font-weight:700; font-size:15px; padding:16px; border-radius:12px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
-  .pricing-cta:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 12px 36px rgba(0,255,136,0.25); }
-  .pricing-cta.outline { background:transparent; color:var(--muted); border:1px solid var(--border); }
-  .pricing-cta.outline:hover { border-color:var(--muted); color:var(--text); transform:none; box-shadow:none; }
-  .pricing-note { text-align:center; margin-top:40px; font-size:13px; color:var(--muted); font-family:'JetBrains Mono',monospace; }
-  .pricing-note span { color:var(--accent); }
-
-  /* CONTACT PAGE */
-  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; max-width:800px; margin:0 auto; }
-  @media(max-width:640px) { .contact-grid { grid-template-columns:1fr; } }
-  .contact-card { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:32px 28px; display:flex; flex-direction:column; align-items:flex-start; gap:16px; transition:border-color 0.2s; text-decoration:none; }
-  .contact-card:hover { border-color:rgba(0,255,136,0.35); }
-  .contact-icon { width:48px; height:48px; background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.15); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; }
-  .contact-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; color:var(--text); }
-  .contact-handle { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--accent); }
-  .contact-desc { font-size:13px; color:var(--muted); line-height:1.6; }
-  .contact-arrow { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); margin-top:auto; }
-  .contact-card:hover .contact-arrow { color:var(--accent); }
-  .contact-info-box { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:28px; max-width:800px; margin:32px auto 0; }
-  .contact-info-box h3 { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:12px; }
-  .contact-info-box p { font-size:14px; color:var(--muted); line-height:1.7; }
-
-  /* POLICY PAGES */
-  .policy-content { max-width:740px; margin:0 auto; }
-  .policy-content h2 { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--accent); margin:40px 0 14px; }
-  .policy-content h2:first-child { margin-top:0; }
-  .policy-content p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
-  .policy-content ul { padding-left:20px; margin-bottom:16px; display:flex; flex-direction:column; gap:8px; }
-  .policy-content ul li { font-size:15px; color:var(--muted); line-height:1.7; }
-  .policy-content strong { color:var(--text); }
-  .policy-date { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.12); display:inline-block; padding:6px 16px; border-radius:20px; margin-bottom:40px; letter-spacing:1px; }
-  .policy-highlight { background:rgba(0,255,136,0.06); border-left:3px solid var(--accent); padding:16px 20px; border-radius:0 10px 10px 0; margin:20px 0; font-size:14px; color:var(--text); line-height:1.7; }
 
   /* AFFILIATE PAGE */
   #affiliatePage { min-height:calc(100vh - 70px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px; }
@@ -333,9 +267,15 @@
     <div class="logo" onclick="showPage('main')">Apex<span>Trade</span></div>
     <div class="nav-right">
       <div class="nav-badge">LIVE</div>
-      <button class="affiliate-nav-btn" onclick="showPage('pricing')">Pricing</button>
-      <button class="affiliate-nav-btn" onclick="showPage('contact')">Contact</button>
-      <button class="affiliate-nav-btn" onclick="showPage('affiliate')">Affiliate</button>
+      <button class="affiliate-nav-btn" onclick="showPage('affiliate')">Affiliate Login</button>
+      <div style="position:relative;">
+        <button class="affiliate-nav-btn" onclick="toggleContactMenu()">📞 Contact Us</button>
+        <div id="contactMenu" style="display:none;position:absolute;top:40px;right:0;background:#131313;border:1px solid #222;border-radius:12px;padding:8px;z-index:999;min-width:180px;">
+          <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:#f0f0f0;font-size:14px;">📱 Telegram</a>
+          <a href="https://www.instagram.com/apexjournel?igsh=MTR4YmFhdG0xeXc5Yg==" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:#f0f0f0;font-size:14px;">📸 Instagram</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </nav>
@@ -346,18 +286,6 @@
   <section class="hero">
     <div class="container">
       <div class="hero-tag">Professional Trading Journal</div>
-      <div class="social-proof-bar">
-        <div class="sp-item">
-          <span class="sp-dot"></span>
-          <span id="todayBuyers" class="sp-num">24</span>
-          <span class="sp-label">purchased today</span>
-        </div>
-        <div class="sp-divider">•</div>
-        <div class="sp-item">
-          <span class="sp-num" id="totalUsers">3,375</span>
-          <span class="sp-label">traders using ApexTrade</span>
-        </div>
-      </div>
       <h1>
         <div>TRACK YOUR</div>
         <div class="line2">TRADES.</div>
@@ -451,8 +379,13 @@
           <div class="price-equiv">= Just ₹1.64/day for a year 🤯</div>
         </div>
 
-        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹1 (Test)</button>
-
+        <button class="buy-btn-big" id="buyBtnBig" onclick="openCheckout()">🚀 Get Lifetime Access — ₹599</button>
+        <div style="margin:14px 0;display:flex;align-items:center;gap:12px;justify-content:center;">
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;">INTERNATIONAL</span>
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+        </div>
+        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()">₮ Pay with USDT — $1</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -685,201 +618,9 @@
     <div class="container">
       <p>Made with ❤️ for <span class="accent">Traders</span> &nbsp;•&nbsp; ApexTrade Journal &nbsp;•&nbsp; <span class="accent">Lifetime Access</span></p>
       <div class="footer-affiliate"><button onclick="showPage('affiliate')">Affiliate? Login here →</button></div>
-      <div class="footer-links">
-        <button onclick="showPage('privacy')">Privacy Policy</button>
-        <button onclick="showPage('terms')">Terms &amp; Conditions</button>
-        <button onclick="showPage('contact')">Contact Us</button>
-        <button onclick="showPage('pricing')">Pricing</button>
-      </div>
     </div>
   </footer>
 
-</div>
-
-<!-- PRICING PAGE -->
-<div id="pricingPage" class="page">
-  <div class="inner-page">
-    <div class="container">
-      <button class="inner-back-btn" onclick="showPage('main')">← Back to Home</button>
-      <div class="page-header">
-        <h1>SIMPLE <span>PRICING</span></h1>
-        <p>One product. One price. No confusion. No subscriptions. Ever.</p>
-      </div>
-      <div class="pricing-grid" style="max-width:480px;">
-        <!-- Main product -->
-        <div class="pricing-card featured">
-          <div class="pricing-badge-pill">BEST VALUE • MOST POPULAR</div>
-          <div class="pricing-name">ApexTrade Journal</div>
-          <div class="pricing-desc">India's most powerful offline trading journal — everything a serious trader needs.</div>
-          <div style="font-size:14px;color:var(--muted);text-decoration:line-through;font-family:'JetBrains Mono',monospace;margin-bottom:4px;">₹999</div>
-          <div class="pricing-amount">₹<span style="font-size:inherit;color:inherit;font-family:inherit;vertical-align:baseline;">599</span></div>
-          <div class="pricing-billing">One-time payment • Lifetime access • Free updates</div>
-          <ul class="pricing-features-list">
-            <li>Multi-Journal Dashboard</li>
-            <li>Deep Analytics (equity curve, win rate, drawdown)</li>
-            <li>AI Trade Coach</li>
-            <li>Prop Firm Challenge Tracker</li>
-            <li>Setup Analysis Board with screenshots</li>
-            <li>Badges &amp; Gamification (XP system)</li>
-            <li>MT5 CSV Import (XM Global &amp; more)</li>
-            <li>Built-in Forex Factory Calendar</li>
-            <li>100% Offline — your data stays private</li>
-            <li>6+ Color Themes</li>
-            <li>Unlimited trade entries</li>
-            <li>Lifetime free updates</li>
-          </ul>
-          <button class="pricing-cta" onclick="openCheckout(); showPage('main');">🚀 Buy Now — ₹599</button>
-        </div>
-      </div>
-      <div class="pricing-note">
-        🔒 Secure payment via Razorpay &nbsp;|&nbsp; 📦 Instant download after payment &nbsp;|&nbsp; ♾️ <span>No subscription, ever</span>
-      </div>
-      <!-- FAQ short -->
-      <div style="max-width:640px;margin:60px auto 0;">
-        <div class="section-label" style="margin-bottom:24px;">Common Questions</div>
-        <div class="faq-list">
-          <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Is ₹599 really a one-time payment?<span class="arrow">+</span></button><div class="faq-answer">Yes, 100%. Pay once, own it forever. No monthly fees, no yearly renewals, no hidden costs of any kind.</div></div>
-          <div class="faq-item"><button class="faq-question" onclick="toggleFaq(this)">Will the price increase later?<span class="arrow">+</span></button><div class="faq-answer">The current launch price of ₹599 is a limited-time offer. The price may increase as we add more features. Early buyers are locked in at ₹599 forever.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CONTACT PAGE -->
-<div id="contactPage" class="page">
-  <div class="inner-page">
-    <div class="container">
-      <button class="inner-back-btn" onclick="showPage('main')">← Back to Home</button>
-      <div class="page-header">
-        <h1>GET IN <span>TOUCH</span></h1>
-        <p>Have a question, feedback, or need support? We're here to help — reach us on any platform below.</p>
-      </div>
-      <div class="contact-grid">
-        <a href="https://t.me/APEXTRADEJOURNEL" target="_blank" class="contact-card">
-          <div class="contact-icon">✈️</div>
-          <div class="contact-name">Telegram</div>
-          <div class="contact-handle">@APEXTRADEJOURNEL</div>
-          <div class="contact-desc">Fastest response. Join our community, ask questions, get updates, and connect with other traders using ApexTrade.</div>
-          <div class="contact-arrow">Open Telegram →</div>
-        </a>
-        <a href="https://www.instagram.com/apexjournel_" target="_blank" class="contact-card">
-          <div class="contact-icon">📸</div>
-          <div class="contact-name">Instagram</div>
-          <div class="contact-handle">@apexjournel_</div>
-          <div class="contact-desc">Follow us for trading tips, product updates, trader spotlights, and behind-the-scenes content. DMs open for support.</div>
-          <div class="contact-arrow">Open Instagram →</div>
-        </a>
-      </div>
-      <div class="contact-info-box">
-        <h3>Support Hours &amp; Response Times</h3>
-        <p>We typically respond within <strong style="color:var(--accent);">2–6 hours</strong> on Telegram and within <strong style="color:var(--accent);">24 hours</strong> on Instagram DMs.</p>
-        <p style="margin-top:8px;">For <strong>payment issues</strong>, download problems, or technical support, Telegram is the fastest channel. Please include your payment ID or order details when reaching out.</p>
-        <p style="margin-top:8px;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;">support hours: 10 AM – 9 PM IST • Monday – Saturday</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PRIVACY POLICY PAGE -->
-<div id="privacyPage" class="page">
-  <div class="inner-page">
-    <div class="container">
-      <button class="inner-back-btn" onclick="showPage('main')">← Back to Home</button>
-      <div class="page-header">
-        <h1>PRIVACY <span>POLICY</span></h1>
-        <p>Your data, your device, your privacy — always.</p>
-      </div>
-      <div class="policy-content">
-        <div class="policy-date">Last Updated: May 2025</div>
-        <div class="policy-highlight">
-          <strong>TL;DR:</strong> ApexTrade Journal stores ALL your trading data 100% locally on your own device. We never collect, upload, or sell your personal trading data. The only data we receive is your payment information (processed securely by Razorpay) and the email/name you provide at checkout.
-        </div>
-        <h2>1. Who We Are</h2>
-        <p>ApexTrade Journal ("we", "us", "our") is an independent trading productivity tool developed and sold in India. Our website is <strong>zinashish88.github.io/APEXTRADE</strong>. For any privacy concerns, contact us via Telegram <strong>@APEXTRADEJOURNEL</strong>.</p>
-        <h2>2. Information We Collect</h2>
-        <p>We collect minimal information, limited to what is necessary to process your purchase:</p>
-        <ul>
-          <li><strong>Name and Email Address</strong> — provided voluntarily at checkout, used only to confirm your purchase and send the product.</li>
-          <li><strong>Payment Information</strong> — processed entirely by Razorpay, our payment partner. We never store or access your card or UPI details.</li>
-          <li><strong>Referral Code</strong> — if you arrived via an affiliate link, we note this in our records solely to pay the referring affiliate their commission.</li>
-        </ul>
-        <h2>3. What We Do NOT Collect</h2>
-        <p>We do <strong>not</strong> collect any of the following:</p>
-        <ul>
-          <li>Your trading data, trade logs, P&L records, or journal entries — these are stored locally on your device only.</li>
-          <li>Your IP address or location beyond what Razorpay may collect for fraud prevention.</li>
-          <li>Browser cookies for tracking or advertising purposes.</li>
-          <li>Any data through third-party analytics or ad networks.</li>
-        </ul>
-        <h2>4. How Your Data Is Stored</h2>
-        <p>ApexTrade Journal is an offline HTML file. All trade data you enter is stored in your browser's <strong>localStorage</strong> on your own device. This data never leaves your device and is not accessible by us or anyone else.</p>
-        <p>Your purchase records (name, email, payment ID, referral code) are stored in a private Google Spreadsheet accessible only to the ApexTrade team, used solely for order fulfilment and affiliate commission payouts.</p>
-        <h2>5. Third-Party Services</h2>
-        <p>We use the following third-party services limited to payment processing:</p>
-        <ul>
-          <li><strong>Razorpay</strong> — our payment gateway. Razorpay is PCI-DSS compliant. Please refer to <strong>razorpay.com/privacy</strong> for their privacy policy.</li>
-        </ul>
-        <h2>6. Data Retention</h2>
-        <p>We retain your purchase record (name, email, payment ID) indefinitely to support lifetime product access and future update delivery. You may request deletion by contacting us on Telegram, after which we will remove your record within 7 business days.</p>
-        <h2>7. Your Rights</h2>
-        <p>You have the right to: request a copy of the data we hold about you; request correction of incorrect data; request deletion of your data (subject to legal obligations); and lodge a complaint with the relevant authority.</p>
-        <h2>8. Children's Privacy</h2>
-        <p>ApexTrade Journal is intended for traders aged 18 and above. We do not knowingly collect information from anyone under 18. If you believe a minor has purchased our product, contact us immediately.</p>
-        <h2>9. Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last Updated" date. Continued use of the product constitutes acceptance of the revised policy.</p>
-        <h2>10. Contact</h2>
-        <p>For any privacy-related queries, reach us on Telegram <strong style="color:var(--accent);">@APEXTRADEJOURNEL</strong> or Instagram <strong style="color:var(--accent);">@apexjournel_</strong>.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TERMS & CONDITIONS PAGE -->
-<div id="termsPage" class="page">
-  <div class="inner-page">
-    <div class="container">
-      <button class="inner-back-btn" onclick="showPage('main')">← Back to Home</button>
-      <div class="page-header">
-        <h1>TERMS &amp; <span>CONDITIONS</span></h1>
-        <p>Please read these terms carefully before purchasing ApexTrade Journal.</p>
-      </div>
-      <div class="policy-content">
-        <div class="policy-date">Last Updated: May 2025</div>
-        <h2>1. Acceptance of Terms</h2>
-        <p>By purchasing and/or using ApexTrade Journal ("the Product"), you ("the Customer") agree to be bound by these Terms and Conditions. If you do not agree, please do not purchase or use the Product.</p>
-        <h2>2. Product Description</h2>
-        <p>ApexTrade Journal is a single-file HTML-based offline trading journal application. Upon purchase, you receive a downloadable <strong>.html file</strong> that runs in any modern web browser. The Product includes all features described on the sales page at the time of purchase.</p>
-        <h2>3. License &amp; Permitted Use</h2>
-        <p>Upon purchase, you are granted a <strong>personal, non-exclusive, non-transferable, lifetime license</strong> to use the Product for your own individual trading journaling purposes.</p>
-        <p>You may <strong>NOT</strong>:</p>
-        <ul>
-          <li>Share, distribute, resell, or sublicense the Product file to any other person.</li>
-          <li>Modify, reverse-engineer, or create derivative products based on the Product without written permission.</li>
-          <li>Upload or redistribute the Product on any website, marketplace, or torrent.</li>
-          <li>Claim ownership or authorship of the Product.</li>
-        </ul>
-        <h2>4. One-Time Payment &amp; Lifetime Access</h2>
-        <p>The purchase price of ₹599 (or current listed price) is a single, one-time payment. There are no recurring charges. Lifetime access means you will continue to receive free updates to the Product for as long as ApexTrade Journal is maintained.</p>
-        <div class="policy-highlight">Note: "Lifetime" refers to the lifetime of the product, not the customer's lifetime. In the unlikely event the product is discontinued, no refund will be issued for a product already delivered and working.</div>
-        <h2>5. Updates &amp; Future Features</h2>
-        <p>We aim to provide free updates to all lifetime customers. Updates will be delivered via the same channel as the original download (Telegram or direct link). We do not guarantee the timeline of future features, though we strive to improve the product regularly.</p>
-        <h2>6. Affiliate Program</h2>
-        <p>We operate an affiliate program where approved partners earn a 35% commission per verified sale. Affiliates must not make false or misleading claims about the Product. Commissions are paid on the 1st of every month via UPI/Bank Transfer, provided a minimum of 1 confirmed sale exists. We reserve the right to withhold or reverse commissions for fraudulent referrals.</p>
-        <h2>7. Disclaimer of Warranties</h2>
-        <p>ApexTrade Journal is a productivity tool for organizing and reviewing your own trades. It does <strong>not</strong> provide financial advice, investment recommendations, or trading signals. Past performance data shown in your journal does not guarantee future results. We are not responsible for any trading losses you incur.</p>
-        <p>The Product is provided "as is" without warranty of any kind. We do not warrant that the Product will be error-free or meet every specific requirement.</p>
-        <h2>8. Limitation of Liability</h2>
-        <p>To the fullest extent permitted by applicable law, ApexTrade Journal and its creators shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of or inability to use the Product.</p>
-        <h2>9. Governing Law</h2>
-        <p>These Terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts of India.</p>
-        <h2>10. Changes to Terms</h2>
-        <p>We reserve the right to modify these Terms at any time. Updated terms will be posted on this page. Continued use of the Product after changes constitutes acceptance.</p>
-        <h2>11. Contact</h2>
-        <p>For questions regarding these terms, contact us on Telegram <strong style="color:var(--accent);">@APEXTRADEJOURNEL</strong>.</p>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- AFFILIATE PAGE -->
@@ -934,57 +675,20 @@
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
-  function setupSocialProof() {
-    // Base date - May 1, 2026
-    var baseDate = new Date('2026-05-01');
-    var today = new Date();
-    var daysDiff = Math.floor((today - baseDate) / (1000 * 60 * 60 * 24));
-    
-    // Total users: 3375 + ~8 per day
-    var totalUsers = 3375 + (daysDiff * 8);
-    document.getElementById('totalUsers').textContent = totalUsers.toLocaleString('en-IN');
-    
-    // Today buyers: random between 20-30
-    var seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
-    var todayBuyers = 20 + (seed % 11);
-    document.getElementById('todayBuyers').textContent = todayBuyers;
-    
-    // Animate total users counter
-    var target = totalUsers;
-    var start = totalUsers - 50;
-    var current = start;
-    var timer = setInterval(function() {
-      current += 2;
-      if (current >= target) {
-        current = target;
-        clearInterval(timer);
-      }
-      document.getElementById('totalUsers').textContent = current.toLocaleString('en-IN');
-    }, 30);
-    
-    // Random bump every 2-5 mins
-    setTimeout(function() {
-      var el = document.getElementById('todayBuyers');
-      var num = parseInt(el.textContent);
-      if (num < 30) {
-        el.textContent = num + 1;
-      }
-    }, Math.random() * 180000 + 120000);
-  }
-
   function toggleContactMenu() {
-    // legacy — contact is now a page
-    showPage('contact');
+    var menu = document.getElementById('contactMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
   }
   
   // Close menu when clicking outside
   document.addEventListener('click', function(e) {
-    // legacy contact menu removed
+    var menu = document.getElementById('contactMenu');
+    if (menu && !e.target.closest('#contactMenu') && !e.target.closest('.affiliate-nav-btn')) {
+      menu.style.display = 'none';
+    }
   });
 
   function showPage(page) {
-    const validPages = ['main','affiliate','pricing','contact','privacy','terms'];
-    if (!validPages.includes(page)) return;
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(page + 'Page').classList.add('active');
     window.scrollTo(0, 0);
@@ -1006,37 +710,42 @@
     }
   }
 
+  async function openCryptoCheckout() {
+    const ref = getRefCode() || 'direct';
+    const btn = document.getElementById('cryptoBtn');
+    btn.innerHTML = '⏳ Creating payment...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref));
+      const data = await res.json();
+      if (data.success && data.invoice_url) {
+        window.location.href = data.invoice_url;
+      } else {
+        alert('Error creating payment. Please try again.');
+        btn.innerHTML = '₮ Pay with USDT — $1';
+        btn.disabled = false;
+      }
+    } catch(err) {
+      alert('Error: ' + err.message);
+      btn.innerHTML = '₮ Pay with USDT — $1';
+      btn.disabled = false;
+    }
+  }
 
   function openCheckout() {
     const ref = getRefCode() || 'direct';
     const options = {
       key: 'rzp_live_SkrgYaCjB5ymU3',
-      amount: 100, // ₹1 test
+      amount: 1000, // ₹10 (TESTING)
       currency: 'INR',
       name: 'ApexTrade Journal',
       description: 'Lifetime Access',
       image: '',
       handler: function(response) {
-        // Send to Google Sheet
-        fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            event: 'payment.captured',
-            payload: {
-              payment: {
-                entity: {
-                  id: response.razorpay_payment_id,
-                  amount: options.amount,
-                  email: 'customer@email.com',
-                  notes: { ref: ref }
-                }
-              }
-            }
-          })
-        }).catch(function(err) { console.log('Sheet error:', err); });
-        // Show download popup
+        // Sale is recorded via Razorpay webhook (Dashboard → Settings → Webhooks)
+        // pointing to the Apps Script URL. Frontend POST removed — unreliable.
         document.getElementById('successPopup').style.display = 'flex';
+        window._paymentSuccess = true;
       },
       prefill: { name: '', email: '', contact: '' },
       notes: { ref: ref },
@@ -1125,8 +834,11 @@
 
   setupBuyButton();
   setupTicker();
-  setupSocialProof();
-
+  if(new URLSearchParams(window.location.search).get('payment') === 'success') {
+    setTimeout(() => {
+      document.getElementById('successPopup').style.display = 'flex';
+    }, 500);
+  }
   // Show download popup only if ?download=1 in URL (Razorpay redirect)
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('download') === '1') {
@@ -1135,8 +847,6 @@
     }, 500);
   }
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
-  const _pg = new URLSearchParams(window.location.search).get('page');
-  if (_pg && ['pricing','contact','privacy','terms'].includes(_pg)) showPage(_pg);
 </script>
 
 <!-- SUCCESS POPUP -->
