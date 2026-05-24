@@ -81,6 +81,21 @@
   .crypto-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#26a17b,#1a7a5e); color:#fff; font-weight:700; font-size:16px; padding:16px 48px; border-radius:14px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; letter-spacing:0.5px; width:100%; transition:all 0.2s; }
   .crypto-btn:hover { transform:translateY(-2px); box-shadow:0 16px 48px rgba(38,161,123,0.3); opacity:0.9; }
   .crypto-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+  /* Purchase notification */
+  .purchase-toast { position:fixed; bottom:24px; left:24px; background:#1a1a1a; border:1px solid #26a17b; border-radius:12px; padding:12px 16px; display:flex; align-items:center; gap:10px; z-index:9998; box-shadow:0 8px 32px rgba(0,0,0,0.4); animation:slideInLeft 0.4s ease; max-width:280px; }
+  .purchase-toast .toast-icon { font-size:20px; }
+  .purchase-toast .toast-text { font-size:12px; color:#fff; line-height:1.4; }
+  .purchase-toast .toast-text strong { color:#26a17b; }
+  .purchase-toast .toast-time { font-size:10px; color:#666; margin-top:2px; }
+  @keyframes slideInLeft { from { transform:translateX(-120%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+  @keyframes slideOutLeft { from { transform:translateX(0); opacity:1; } to { transform:translateX(-120%); opacity:0; } }
+
+  /* Live users counter */
+  .live-users-bar { background:rgba(38,161,123,0.08); border:1px solid rgba(38,161,123,0.2); border-radius:10px; padding:10px 16px; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:16px; }
+  .live-users-bar .pulse { width:8px; height:8px; background:#26a17b; border-radius:50%; animation:pulse 2s infinite; }
+  .live-users-bar span { font-size:13px; color:#ccc; font-family:'JetBrains Mono',monospace; }
+  .live-users-bar strong { color:#26a17b; }
+
   .ref-badge { margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.15); padding:6px 16px; border-radius:20px; display:none; }
   .ref-badge.show { display:block; }
   .buy-features { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-top:24px; }
@@ -379,6 +394,10 @@
           <div class="price-equiv">= Just $0.027/day for a year 🤯</div>
         </div>
 
+        <div class="live-users-bar">
+          <div class="pulse"></div>
+          <span><strong id="liveUserCount">3,082</strong> traders using ApexTrade</span>
+        </div>
         <div style="text-align:center;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#4A9EFF;letter-spacing:2px;font-weight:700;background:rgba(74,158,255,0.08);padding:8px 14px;border-radius:20px;border:1px solid rgba(74,158,255,0.35);">🇮🇳 FOR INDIAN USERS</div>
         <button class="buy-btn-big" id="buyBtnBig" style="background:linear-gradient(135deg,#1a6fd4,#4A9EFF);box-shadow:0 8px 32px rgba(74,158,255,0.3);" onclick="openCheckout()">🇮🇳 Pay with UPI — $10</button>
         <div style="margin:28px 0 12px;text-align:center;">
@@ -833,6 +852,17 @@
 
   setupBuyButton();
   setupTicker();
+  setupLiveStats();
+
+  function setupLiveStats() {
+    // Live user counter — increments by 1 every 30 seconds
+    let userCount = 3082;
+    setInterval(() => {
+      userCount += 1;
+      const el = document.getElementById('liveUserCount');
+      if (el) el.textContent = userCount.toLocaleString('en-IN');
+    }, 30000);
+  }
   if(new URLSearchParams(window.location.search).get('payment') === 'success') {
     setTimeout(() => {
       document.getElementById('successPopup').style.display = 'flex';
