@@ -385,7 +385,7 @@
           <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:2px;">INTERNATIONAL</span>
           <div style="flex:1;height:1px;background:var(--border);"></div>
         </div>
-        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()">₮ Pay with USDT — $10</button>
+        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()">₮ Pay with USDT — $1</button>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -722,12 +722,12 @@
         window.location.href = data.invoice_url;
       } else {
         alert('Error creating payment. Please try again.');
-        btn.innerHTML = '₮ Pay with USDT — $10';
+        btn.innerHTML = '₮ Pay with USDT — $1';
         btn.disabled = false;
       }
     } catch(err) {
       alert('Error: ' + err.message);
-      btn.innerHTML = '₮ Pay with USDT — $10';
+      btn.innerHTML = '₮ Pay with USDT — $1';
       btn.disabled = false;
     }
   }
