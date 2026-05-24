@@ -306,7 +306,7 @@
         <div class="line2">LIKE A FUNDED</div>
         <div class="line3">PROFESSIONAL.</div>
       </h1>
-      <p class="hero-sub">India's <strong>most powerful</strong> trading journal. Track your trades, identify patterns, and achieve consistent profitability.</p>
+      <p class="hero-sub">World's <strong>most powerful</strong> trading journal. Track your trades, identify patterns, and achieve consistent profitability.</p>
     </div>
   </section>
 
@@ -347,6 +347,16 @@
     <div class="container">
       <div class="buy-wrapper">
 
+        <div style="display:flex;gap:10px;margin-bottom:12px;">
+          <div class="live-users-bar" style="flex:1;margin-bottom:0;">
+            <div class="pulse"></div>
+            <span><strong id="liveUserCount">3,082</strong> traders using ApexTrade</span>
+          </div>
+          <div class="live-users-bar" style="flex:1;margin-bottom:0;border-color:rgba(255,165,0,0.3);background:rgba(255,165,0,0.06);">
+            <div class="pulse" style="background:#FFA500;"></div>
+            <span style="color:#ccc;"><strong id="todayCount" style="color:#FFA500;">37</strong> purchased today</span>
+          </div>
+        </div>
         <div class="urgency-bar">🔥 LIMITED TIME OFFER — ENDS SOON</div>
 
         <div class="compare-table">
@@ -394,10 +404,6 @@
           <div class="price-equiv">= Just $0.027/day for a year 🤯</div>
         </div>
 
-        <div class="live-users-bar">
-          <div class="pulse"></div>
-          <span><strong id="liveUserCount">3,082</strong> traders using ApexTrade</span>
-        </div>
         <div style="text-align:center;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#4A9EFF;letter-spacing:2px;font-weight:700;background:rgba(74,158,255,0.08);padding:8px 14px;border-radius:20px;border:1px solid rgba(74,158,255,0.35);">🇮🇳 FOR INDIAN USERS</div>
         <button class="buy-btn-big" id="buyBtnBig" style="background:linear-gradient(135deg,#1a6fd4,#4A9EFF);box-shadow:0 8px 32px rgba(74,158,255,0.3);" onclick="openCheckout()">🇮🇳 Pay with UPI — $10</button>
         <div style="margin:28px 0 12px;text-align:center;">
@@ -855,6 +861,18 @@
   setupLiveStats();
 
   function setupLiveStats() {
+    // Today purchased — starts random 20-50, increments by 1 every 1 min, resets at midnight
+    let todayPurchased = Math.floor(Math.random() * 31) + 20;
+    const todayEl = document.getElementById('todayCount');
+    if (todayEl) {
+      todayEl.textContent = todayPurchased;
+      setInterval(() => {
+        todayPurchased += 1;
+        if (todayPurchased > 50) todayPurchased = Math.floor(Math.random() * 10) + 20; // reset
+        todayEl.textContent = todayPurchased;
+      }, 60000); // every 1 minute
+    }
+
     // Live user counter — increments by 1 every 30 seconds
     let userCount = 3082;
     setInterval(() => {
