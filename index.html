@@ -267,8 +267,19 @@
   .popup-icon { font-size:64px; margin-bottom:16px; }
   .popup-title { font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--accent); letter-spacing:2px; margin-bottom:8px; }
   .popup-sub { font-size:15px; color:var(--muted); margin-bottom:32px; line-height:1.6; }
-  .popup-download-btn { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:16px; padding:16px 40px; border-radius:12px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; margin-bottom:16px; width:100%; justify-content:center; }
+  .popup-download-btn { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#000; font-weight:700; font-size:16px; padding:16px 40px; border-radius:12px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; margin-bottom:12px; width:100%; justify-content:center; box-sizing:border-box; }
   .popup-download-btn:hover { background:#00cc6e; transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,255,136,0.3); }
+  .popup-key-btn { display:inline-flex; align-items:center; gap:10px; background:#1a1a2e; color:#fff; font-weight:700; font-size:16px; padding:16px 40px; border-radius:12px; text-decoration:none; transition:all 0.2s; font-family:'DM Sans',sans-serif; margin-bottom:16px; width:100%; justify-content:center; box-sizing:border-box; border:1px solid #444; cursor:pointer; }
+  .popup-key-btn:hover { background:#2a2a3e; transform:translateY(-2px); }
+  .popup-divider { display:flex; align-items:center; gap:10px; margin:8px 0 14px; }
+  .popup-divider::before, .popup-divider::after { content:''; flex:1; height:1px; background:#333; }
+  .popup-divider span { font-size:11px; color:#666; font-family:'JetBrains Mono',monospace; letter-spacing:2px; white-space:nowrap; }
+  .popup-email-input { width:100%; padding:12px 16px; border-radius:10px; border:1px solid #444; background:#1a1a1a; color:#fff; font-size:14px; font-family:'DM Sans',sans-serif; box-sizing:border-box; margin-bottom:10px; outline:none; }
+  .popup-email-input:focus { border-color:#00ff88; }
+  .popup-send-btn { width:100%; padding:14px; border-radius:10px; background:linear-gradient(135deg,#1a6fd4,#4A9EFF); color:#fff; font-weight:700; font-size:15px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; margin-bottom:8px; }
+  .popup-send-btn:hover { opacity:0.9; transform:translateY(-1px); }
+  .popup-send-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+  .popup-email-status { font-size:12px; text-align:center; margin-bottom:8px; min-height:18px; }
   .popup-close { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:13px; padding:10px 24px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; width:100%; }
   .popup-close:hover { border-color:var(--muted); color:var(--text); }
   .popup-note { font-size:12px; color:var(--muted); margin-top:16px; font-family:'JetBrains Mono',monospace; }
@@ -768,9 +779,9 @@
       description: 'Lifetime Access',
       image: '',
       handler: function(response) {
-        // Sale is recorded via Razorpay webhook (Dashboard → Settings → Webhooks)
-        // pointing to the Apps Script URL. Frontend POST removed — unreliable.
-        document.getElementById('successPopup').style.display = 'flex';
+        // Sale is recorded via Razorpay webhook
+        const keys = generateKeys(7);
+        showSuccessPopup(keys);
         window._paymentSuccess = true;
       },
       prefill: { name: '', email: '', contact: '' },
@@ -863,6 +874,112 @@
   setupBuyButton();
   setupTicker();
   setupLiveStats();
+  initSuccessPopup();
+
+  // ─── License Key Generator ───
+  function generateKey() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+    return `APEX-${seg()}-${seg()}-${seg()}`;
+  }
+
+  function generateKeys(count) {
+    return Array.from({length: count}, () => generateKey());
+  }
+
+  // ─── Init Success Popup (localStorage) ───
+  function initSuccessPopup() {
+    const saved = localStorage.getItem('apextrade_success');
+    if (saved) {
+      const data = JSON.parse(saved);
+      window._licenseKeys = data.keys;
+      document.getElementById('successPopup').style.display = 'flex';
+    }
+  }
+
+  function showSuccessPopup(keys) {
+    window._licenseKeys = keys;
+    localStorage.setItem('apextrade_success', JSON.stringify({ keys: keys, ts: Date.now() }));
+    document.getElementById('successPopup').style.display = 'flex';
+  }
+
+  function closeSuccessPopup() {
+    document.getElementById('successPopup').style.display = 'none';
+    // Keep in localStorage so it shows again on refresh
+  }
+
+  // ─── Download License Keys as text file ───
+  function downloadLicenseKeys() {
+    const keys = window._licenseKeys || generateKeys(7);
+    const content = `ApexTrade Journal — License Keys
+================================
+Purchase Date: ${new Date().toLocaleDateString()}
+
+YOUR 7 LICENSE KEYS:
+--------------------
+${keys.map((k,i) => `Key ${i+1}: ${k}`).join('\n')}
+
+HOW TO USE:
+-----------
+1. Download ApexTrade Journal HTML file
+2. Open in Chrome browser
+3. Enter any one key when prompted
+4. Each key works on ONE device only
+5. Use a different key on each new device
+
+IMPORTANT:
+----------
+• Keep these keys safe — they cannot be recovered
+• Do NOT share keys with others
+• Support: zinashish88@gmail.com
+
+— ApexTrade Team`;
+
+    const blob = new Blob([content], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ApexTrade-License-Keys.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ─── Send Email via Apps Script ───
+  async function sendEmailWithKeys() {
+    const email = document.getElementById('popupEmail').value.trim();
+    const btn = document.getElementById('popupSendBtn');
+    const status = document.getElementById('popupEmailStatus');
+
+    if (!email || !email.includes('@')) {
+      status.style.color = '#ff4444';
+      status.textContent = '⚠️ Please enter a valid email address';
+      return;
+    }
+
+    const keys = window._licenseKeys || generateKeys(7);
+    window._licenseKeys = keys;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Sending...';
+    status.textContent = '';
+
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=sendEmail&email=' + encodeURIComponent(email) + '&keys=' + encodeURIComponent(JSON.stringify(keys)));
+      const data = await res.json();
+      if (data.success) {
+        status.style.color = '#00ff88';
+        status.textContent = '✅ Email sent! Check your inbox (and spam folder)';
+        btn.textContent = '✅ Email Sent!';
+      } else {
+        throw new Error(data.error || 'Failed');
+      }
+    } catch(err) {
+      status.style.color = '#ff4444';
+      status.textContent = '❌ Failed to send. Please try again.';
+      btn.disabled = false;
+      btn.textContent = '✉️ Send Journal & Keys to Email';
+    }
+  }
 
   function setupLiveStats() {
     // Today purchased — starts random 25-50, increments by 1 every 5 min, resets to 25 after 50
@@ -887,14 +1004,16 @@
   }
   if(new URLSearchParams(window.location.search).get('payment') === 'success') {
     setTimeout(() => {
-      document.getElementById('successPopup').style.display = 'flex';
+      const keys = generateKeys(7);
+      showSuccessPopup(keys);
     }, 500);
   }
   // Show download popup only if ?download=1 in URL (Razorpay redirect)
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('download') === '1') {
     setTimeout(() => {
-      document.getElementById('successPopup').style.display = 'flex';
+      const keys = generateKeys(7);
+      showSuccessPopup(keys);
     }, 500);
   }
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
@@ -902,16 +1021,30 @@
 
 <!-- SUCCESS POPUP -->
 <div class="popup-overlay" id="successPopup">
-  <div class="popup-box">
+  <div class="popup-box" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;">
     <div class="popup-icon">🎉</div>
     <div class="popup-title">PAYMENT SUCCESSFUL!</div>
-    <div class="popup-sub">Thank you for purchasing ApexTrade Journal!<br>Your lifetime access is ready to download.</div>
-    <a href="apex-journal.html" download="ApexTrade-Journal.html" class="popup-download-btn">
-      ⬇️ Download ApexTrade Journal
+    <div class="popup-sub">Welcome to ApexTrade Journal! Your lifetime access is ready.</div>
+
+    <!-- Download Journal -->
+    <a href="https://raw.githubusercontent.com/zinashish88/APEXTRADE/main/apexjournel.html" download="ApexTrade-Journal.html" class="popup-download-btn">
+      📥 Download Journal
     </a>
-    <button class="popup-close" onclick="document.getElementById('successPopup').style.display='none'">
-      Close
+
+    <!-- Download License Keys -->
+    <button class="popup-key-btn" id="downloadKeysBtn" onclick="downloadLicenseKeys()">
+      🔑 Download License Keys
     </button>
+
+    <!-- Email Section -->
+    <div class="popup-divider"><span>📧 RECEIVE ON EMAIL</span></div>
+    <input type="email" class="popup-email-input" id="popupEmail" placeholder="Enter your email address" />
+    <button class="popup-send-btn" id="popupSendBtn" onclick="sendEmailWithKeys()">
+      ✉️ Send Journal & Keys to Email
+    </button>
+    <div class="popup-email-status" id="popupEmailStatus"></div>
+
+    <button class="popup-close" onclick="closeSuccessPopup()">✕ Close</button>
     <div class="popup-note">📌 Save the file to your device for lifetime access</div>
   </div>
 </div>
