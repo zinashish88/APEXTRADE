@@ -672,17 +672,18 @@
       </div>
       <div class="ref-info-bar">
         <div><div class="ref-label">Your Ref Code</div><div class="ref-code-disp" id="displayRef">—</div></div>
-        <button class="copy-link-btn" id="copyBtn" onclick="copyLink()">📋 Copy Link</button>
+        <button class="copy-link-btn" id="copyBtn" onclick="copyLink()">📋 Copy Your Refer Link</button>
       </div>
       <div class="dash-stats-grid">
         <div class="dash-stat-card"><div class="dash-stat-num green" id="totalSales">0</div><div class="dash-stat-label">Total Sales</div></div>
-        <div class="dash-stat-card"><div class="dash-stat-num orange">$4</div><div style="font-size:12px;color:#888;margin-top:2px;">₹380</div><div class="dash-stat-label">Per Sale</div></div>
+        <div class="dash-stat-card"><div class="dash-stat-num orange">$4</div><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#888;line-height:1;margin-top:2px;">₹380</div><div class="dash-stat-label">Per Sale</div></div>
       </div>
       <div class="commission-card">
         <div class="commission-label">Total Commission Earned</div>
         <div class="commission-amount" id="totalCommission">$0</div>
-        <div id="totalCommissionINR" style="font-size:16px;color:#888;margin-bottom:6px;">₹0</div>
-        <div class="commission-sub">40% of $10 per sale • 1$ = ₹95</div>
+        <div id="totalCommissionINR" style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#aaa;line-height:1;margin-bottom:6px;">₹0</div>
+        <div style="font-size:18px;font-weight:700;color:#00ff88;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;margin-bottom:4px;">🔥 40% COMMISSION PER SALE</div>
+        <div class="commission-sub">$4 per sale • 1$ = ₹95</div>
       </div>
       <div class="payout-info">
         <div class="payout-icon">💸</div>
@@ -844,7 +845,7 @@
     navigator.clipboard.writeText(link).then(() => {
       const btn = document.getElementById('copyBtn');
       btn.textContent = '✅ Copied!';
-      setTimeout(() => btn.textContent = '📋 Copy Link', 2000);
+      setTimeout(() => btn.textContent = '📋 Copy Your Refer Link', 2000);
     });
   }
 
@@ -864,16 +865,16 @@
   setupLiveStats();
 
   function setupLiveStats() {
-    // Today purchased — starts random 20-50, increments by 1 every 1 min, resets at midnight
-    let todayPurchased = Math.floor(Math.random() * 31) + 20;
+    // Today purchased — starts random 25-50, increments by 1 every 5 min, resets to 25 after 50
+    let todayPurchased = Math.floor(Math.random() * 26) + 25;
     const todayEl = document.getElementById('todayCount');
     if (todayEl) {
       todayEl.textContent = todayPurchased;
       setInterval(() => {
         todayPurchased += 1;
-        if (todayPurchased > 50) todayPurchased = Math.floor(Math.random() * 10) + 20; // reset
+        if (todayPurchased > 50) todayPurchased = 25;
         todayEl.textContent = todayPurchased;
-      }, 60000); // every 1 minute
+      }, 300000); // every 5 minutes
     }
 
     // Live user counter — increments by 1 every 30 seconds
