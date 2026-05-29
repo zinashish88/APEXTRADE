@@ -876,6 +876,28 @@
   setupLiveStats();
   initSuccessPopup();
 
+  // ─── Download Journal ───
+  async function downloadJournal() {
+    const btn = event.target;
+    btn.textContent = '⏳ Downloading...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('https://raw.githubusercontent.com/zinashish88/APEXTRADE/main/apexjournel.html');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ApexTrade-Journal.html';
+      a.click();
+      URL.revokeObjectURL(url);
+      btn.textContent = '✅ Downloaded!';
+      setTimeout(() => { btn.textContent = '📥 Download Journal'; btn.disabled = false; }, 3000);
+    } catch(err) {
+      btn.textContent = '❌ Failed — Try Again';
+      btn.disabled = false;
+    }
+  }
+
   // ─── License Key Generator ───
   function generateKey() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -1027,9 +1049,9 @@ IMPORTANT:
     <div class="popup-sub">Welcome to ApexTrade Journal! Your lifetime access is ready.</div>
 
     <!-- Download Journal -->
-    <a href="https://raw.githubusercontent.com/zinashish88/APEXTRADE/main/apexjournel.html" download="ApexTrade-Journal.html" class="popup-download-btn">
+    <button class="popup-download-btn" onclick="downloadJournal()">
       📥 Download Journal
-    </a>
+    </button>
 
     <!-- Download License Keys -->
     <button class="popup-key-btn" id="downloadKeysBtn" onclick="downloadLicenseKeys()">
