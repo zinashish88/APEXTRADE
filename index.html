@@ -884,7 +884,7 @@
     btn.textContent = '⏳ Downloading...';
     btn.disabled = true;
     try {
-      const res = await fetch('https://raw.githubusercontent.com/zinashish88/APEXTRADE/main/apexjournel.html');
+      const res = await fetch('https://github.com/zinashish88/APEXTRADE/raw/main/apexjournel.html');
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
