@@ -1001,9 +1001,17 @@ IMPORTANT:
     const btn = document.getElementById('popupSendBtn');
     const status = document.getElementById('popupEmailStatus');
 
+    const emailConfirm = document.getElementById('popupEmailConfirm').value.trim();
+
     if (!email || !email.includes('@')) {
       status.style.color = '#ff4444';
       status.textContent = '⚠️ Please enter a valid email address';
+      return;
+    }
+
+    if (email !== emailConfirm) {
+      status.style.color = '#ff4444';
+      status.textContent = '⚠️ Emails do not match! Please check again';
       return;
     }
 
@@ -1093,6 +1101,7 @@ IMPORTANT:
     <!-- Email Section -->
     <div class="popup-divider"><span>📧 RECEIVE ON EMAIL</span></div>
     <input type="email" class="popup-email-input" id="popupEmail" placeholder="Enter your email address" />
+    <input type="email" class="popup-email-input" id="popupEmailConfirm" placeholder="Confirm your email address" />
     <button class="popup-send-btn" id="popupSendBtn" onclick="sendEmailWithKeys()">
       ✉️ Send Journal & Keys to Email
     </button>
