@@ -387,7 +387,12 @@
     let totalRevUSD = 0, totalCommUSD = 0, totalRevINR = 0, totalCommINR = 0, activeAff = 0;
 
     allSalesData.forEach(s => {
-      const cur = s.currency || 'USD';
+      // Detect currency: if email contains '(crypto)' = Plisio USD, else = Razorpay INR
+      let cur = s.currency || '';
+      if (!cur) {
+        const email = (s.email || '').toLowerCase();
+        cur = email.includes('crypto') ? 'USD' : 'INR';
+      }
       totalRevUSD += toUSD(s.amount, cur);
       totalCommUSD += toUSD(s.commission, cur);
       totalRevINR += toINR(s.amount, cur);
@@ -460,7 +465,12 @@
       const date = new Date(s.timestamp);
       const dateStr = `${date.getDate()}/${date.getMonth()+1} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
 
-      const cur = s.currency || 'USD';
+      // Detect currency: if email contains '(crypto)' = Plisio USD, else = Razorpay INR
+      let cur = s.currency || '';
+      if (!cur) {
+        const email = (s.email || '').toLowerCase();
+        cur = email.includes('crypto') ? 'USD' : 'INR';
+      }
       const amtUSD = toUSD(amt, cur);
       const amtINR = toINR(amt, cur);
       const commUSD = toUSD(comm, cur);
