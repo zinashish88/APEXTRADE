@@ -780,9 +780,11 @@
       image: '',
       handler: function(response) {
         // Sale is recorded via Razorpay webhook
-        const keys = generateKeys(7);
-        showSuccessPopup(keys);
         window._paymentSuccess = true;
+        window._razorpayPaymentId = response.razorpay_payment_id;
+        // Wait for webhook to process keys, then fetch
+        showSuccessPopupLoading();
+        setTimeout(() => fetchKeysAndShow(response.razorpay_payment_id), 5000);
       },
       prefill: { name: '', email: '', contact: '' },
       notes: { ref: ref },
@@ -919,10 +921,48 @@
     }
   }
 
+  function showSuccessPopupLoading() {
+    document.getElementById('successPopup').style.display = 'flex';
+    document.getElementById('downloadKeysBtn').textContent = '⏳ Preparing your keys...';
+    document.getElementById('downloadKeysBtn').disabled = true;
+  }
+
   function showSuccessPopup(keys) {
     window._licenseKeys = keys;
     localStorage.setItem('apextrade_success', JSON.stringify({ keys: keys, ts: Date.now() }));
     document.getElementById('successPopup').style.display = 'flex';
+    document.getElementById('downloadKeysBtn').textContent = '🔑 Download License Keys';
+    document.getElementById('downloadKeysBtn').disabled = false;
+  }
+
+  async function fetchKeysAndShow(paymentId) {
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId));
+      const data = await res.json();
+      if (data.success && data.keys && data.keys.length > 0) {
+        showSuccessPopup(data.keys);
+      } else {
+        // Webhook not processed yet — retry after 10 more seconds
+        setTimeout(() => fetchKeysAndShowRetry(paymentId), 10000);
+      }
+    } catch(err) {
+      setTimeout(() => fetchKeysAndShowRetry(paymentId), 10000);
+    }
+  }
+
+  async function fetchKeysAndShowRetry(paymentId) {
+    try {
+      const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId));
+      const data = await res.json();
+      if (data.success && data.keys && data.keys.length > 0) {
+        showSuccessPopup(data.keys);
+      } else {
+        // Fallback — generate keys locally if webhook failed
+        showSuccessPopup(generateKeys(7));
+      }
+    } catch(err) {
+      showSuccessPopup(generateKeys(7));
+    }
   }
 
   function closeSuccessPopup() {
@@ -1026,16 +1066,14 @@ IMPORTANT:
   }
   if(new URLSearchParams(window.location.search).get('payment') === 'success') {
     setTimeout(() => {
-      const keys = generateKeys(7);
-      showSuccessPopup(keys);
+      showSuccessPopupLoading();
     }, 500);
   }
   // Show download popup only if ?download=1 in URL (Razorpay redirect)
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.get('download') === '1') {
     setTimeout(() => {
-      const keys = generateKeys(7);
-      showSuccessPopup(keys);
+      showSuccessPopupLoading();
     }, 500);
   }
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
