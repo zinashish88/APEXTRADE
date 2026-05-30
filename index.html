@@ -879,25 +879,14 @@
   initSuccessPopup();
 
   // ─── Download Journal ───
-  async function downloadJournal() {
-    const btn = event.target;
-    btn.textContent = '⏳ Downloading...';
-    btn.disabled = true;
-    try {
-      const res = await fetch('https://github.com/zinashish88/APEXTRADE/raw/main/apexjournel.html');
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'ApexTrade-Journal.html';
-      a.click();
-      URL.revokeObjectURL(url);
-      btn.textContent = '✅ Downloaded!';
-      setTimeout(() => { btn.textContent = '📥 Download Journal'; btn.disabled = false; }, 3000);
-    } catch(err) {
-      btn.textContent = '❌ Failed — Try Again';
-      btn.disabled = false;
-    }
+  function downloadJournal() {
+    const a = document.createElement('a');
+    a.href = 'https://github.com/zinashish88/APEXTRADE/raw/main/apexjournel.html';
+    a.download = 'ApexTrade-Journal.html';
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   // ─── License Key Generator ───
@@ -1064,6 +1053,11 @@ IMPORTANT:
       if (el) el.textContent = userCount.toLocaleString('en-IN');
     }, 30000);
   }
+  // Auto download if ?download=1
+  if(new URLSearchParams(window.location.search).get('download') === '1') {
+    setTimeout(() => downloadJournal(), 500);
+  }
+
   if(new URLSearchParams(window.location.search).get('payment') === 'success') {
     setTimeout(() => {
       showSuccessPopupLoading();
