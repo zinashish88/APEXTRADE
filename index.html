@@ -55,7 +55,7 @@
   .preview-tabs { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:28px; }
   .preview-tab { background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; padding:8px 20px; border-radius:20px; cursor:pointer; font-family:'JetBrains Mono',monospace; letter-spacing:1px; transition:all 0.2s; }
   .preview-tab:hover,.preview-tab.active { border-color:var(--accent); color:var(--accent); background:rgba(0,255,136,0.06); }
-  .preview-screen { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; overflow:visible; display:none; position:relative; }
+  .preview-screen { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; overflow:hidden; display:none; position:relative; }
   .preview-screen.active { display:block; }
   .preview-screen::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); z-index:1; }
   .preview-caption { padding:14px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
