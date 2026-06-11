@@ -63,6 +63,33 @@
   .preview-caption span { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); letter-spacing:1px; }
   .preview-screen img { width:100%; height:auto; display:block; opacity:0.9; transition:opacity 0.2s; }
   .preview-screen:hover img { opacity:1; }
+  /* Responsive image wrapper */
+  .preview-img-wrap {
+    width:100%;
+    overflow-x:hidden;
+    overflow-y:auto;
+    border-radius:8px;
+    scrollbar-width:thin;
+    scrollbar-color:#00ff88 #1a1a1a;
+    max-height:500px;
+  }
+  .preview-img-wrap img {
+    width:100%;
+    height:auto;
+    display:block;
+  }
+  @media(max-width:600px) {
+    .preview-img-wrap {
+      max-height:320px;
+    }
+    .preview-tabs {
+      gap:6px;
+    }
+    .preview-tab {
+      font-size:11px;
+      padding:7px 12px;
+    }
+  }
 
   /* BUY SECTION */
   .buy-section { padding:80px 0; border-top:1px solid var(--border); }
@@ -288,6 +315,9 @@
     .stats-grid { grid-template-columns:1fr; }
     .login-box { padding:32px 20px; }
     .buy-btn-big { padding:16px 32px; font-size:16px; }
+    .nav-right { gap:8px; }
+    .affiliate-nav-btn { font-size:10px; padding:5px 8px; }
+    .nav-badge { font-size:10px; padding:3px 8px; }
   }
 
   /* SUCCESS POPUP */
@@ -370,22 +400,22 @@
       </div>
       <div class="preview-screen active" id="prev0">
         <div class="preview-caption"><div class="preview-dot"></div><span>DASHBOARD — Multi-journal overview with real-time P&L stats</span></div>
-        <div style="width:100%;height:450px;overflow-y:scroll;overflow-x:hidden;border-radius:8px;scrollbar-width:thin;scrollbar-color:#00ff88 #1a1a1a;"><img src="ss1.png" alt="ApexTrade Dashboard" loading="lazy" style="width:100%;height:auto;display:block;" /></div>
+        <div class="preview-img-wrap"><img src="ss1.png" alt="ApexTrade Dashboard" loading="lazy" /></div>
         <div class="scroll-hint">↕ SCROLL TO EXPLORE</div>
       </div>
       <div class="preview-screen" id="prev1">
         <div class="preview-caption"><div class="preview-dot"></div><span>ANALYTICS — Equity curve, win/loss chart & key performance metrics</span></div>
-        <div style="width:100%;height:450px;overflow-y:scroll;overflow-x:hidden;border-radius:8px;scrollbar-width:thin;scrollbar-color:#00ff88 #1a1a1a;"><img src="ss2.png" alt="ApexTrade Analytics" loading="lazy" style="width:100%;height:auto;display:block;" /></div>
+        <div class="preview-img-wrap"><img src="ss2.png" alt="ApexTrade Analytics" loading="lazy" /></div>
         <div class="scroll-hint">↕ SCROLL TO EXPLORE</div>
       </div>
       <div class="preview-screen" id="prev2">
         <div class="preview-caption"><div class="preview-dot"></div><span>ANALYSIS — Track your setups with before & after chart screenshots</span></div>
-        <div style="width:100%;height:450px;overflow-y:scroll;overflow-x:hidden;border-radius:8px;scrollbar-width:thin;scrollbar-color:#00ff88 #1a1a1a;"><img src="ss3.png" alt="ApexTrade Analysis" loading="lazy" style="width:100%;height:auto;display:block;" /></div>
+        <div class="preview-img-wrap"><img src="ss3.png" alt="ApexTrade Analysis" loading="lazy" /></div>
         <div class="scroll-hint">↕ SCROLL TO EXPLORE</div>
       </div>
       <div class="preview-screen" id="prev3">
         <div class="preview-caption"><div class="preview-dot"></div><span>BADGES & MILESTONES — Gamified trading progression system</span></div>
-        <div style="width:100%;height:450px;overflow-y:scroll;overflow-x:hidden;border-radius:8px;scrollbar-width:thin;scrollbar-color:#00ff88 #1a1a1a;"><img src="ss4.png" alt="ApexTrade Badges" loading="lazy" style="width:100%;height:auto;display:block;" /></div>
+        <div class="preview-img-wrap"><img src="ss4.png" alt="ApexTrade Badges" loading="lazy" /></div>
       </div>
 
       <div class="preview-screen" id="prev4">
