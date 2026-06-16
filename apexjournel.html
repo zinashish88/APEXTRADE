@@ -488,6 +488,11 @@ textarea{resize:vertical;min-height:66px;line-height:1.7}
 
   <div class="stl" style="display:none" id="rt-label">Recent Trades</div>
   <div class="panel">
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:8px 12px 0 12px;">
+      <button onclick="document.getElementById('csv-import-input').click()" style="padding:7px 14px;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;border-radius:4px;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(74,158,221,.1)'" onmouseout="this.style.background='transparent'">⬆ IMPORT CSV</button>
+      <input type="file" id="csv-import-input" accept=".csv" style="display:none" onchange="importJournalCSV(event)">
+      <button onclick="exportJournalCSV()" style="padding:7px 14px;background:transparent;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;border-radius:4px;cursor:pointer;transition:all .15s;" onmouseover="this.style.background='rgba(61,214,140,.1)'" onmouseout="this.style.background='transparent'">⬇ EXPORT CSV</button>
+    </div>
     <div class="tw">
       <table>
         <thead><tr><th>#</th><th>Pair</th><th>Direction</th><th>Entry Date</th><th>Exit Date</th><th>Stop Loss</th><th>Grade</th><th>Trading Plan</th><th>Strategy</th><th>Status</th><th>Risk/Reward</th><th>Before Screenshot</th><th>After Screenshot</th><th>Reasons</th><th></th></tr></thead>
@@ -1208,6 +1213,7 @@ function renderJournalTabs(){
           <span style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:${isActive?c.accent:'var(--text2)'};font-family:var(--mono)">${j.name}</span>
         </div>
         <div style="display:flex;gap:2px;opacity:${isActive?1:0};transition:opacity 0.15s" class="jcard-acts-${j.id}">
+          <button onclick="event.stopPropagation();exportJournalJSON(${j.id})" title="Export this journal as JSON" style="background:rgba(255,255,255,0.06);border:none;color:var(--text3);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:all 0.12s" onmouseover="this.style.background='rgba(61,214,140,0.2)';this.style.color='var(--green)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='var(--text3)'">⬇</button>
           <button onclick="event.stopPropagation();renameJournal(${j.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--text3);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all 0.12s" onmouseover="this.style.background='rgba(74,158,221,0.2)';this.style.color='var(--blue)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='var(--text3)'">✎</button>
           ${journals.length>1?`<button onclick="event.stopPropagation();deleteJournal(${j.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--text3);width:22px;height:22px;border-radius:4px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all 0.12s" onmouseover="this.style.background='rgba(224,92,110,0.2)';this.style.color='var(--red)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='var(--text3)'">✕</button>`:''}
         </div>
@@ -1496,8 +1502,199 @@ function quickAddTrade(){
   showSuccessPopup(inst, status, rr);
 }
 
-function delT(id){trades=trades.filter(t=>t.id!==id);save();renderTbl();updStats();toast('Deleted');}
+function exportBackup(){
+  try {
+    // Collect all localStorage keys related to APEX
+    const backup = {};
+    for(let i=0; i<localStorage.length; i++){
+      const k = localStorage.key(i);
+      backup[k] = localStorage.getItem(k);
+    }
+    const json = JSON.stringify(backup, null, 2);
+    const blob = new Blob([json], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'APEX_Backup_' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    localStorage.setItem('apextj_last_backup', Date.now().toString());
+    toast('✓ Backup saved — keep this file safe!');
+  } catch(err) {
+    toast('❌ Backup failed: ' + err.message);
+  }
+}
+
+function importBackup(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const backup = JSON.parse(e.target.result);
+      if(typeof backup !== 'object' || Array.isArray(backup)){
+        toast('❌ Invalid backup file'); return;
+      }
+      if(!confirm('⚠️ This will REPLACE all current data with the backup. Continue?')) return;
+      // Preserve license key and device ID
+      const licenseKey = localStorage.getItem('apex_license_key') || '';
+      const deviceId = localStorage.getItem('apex_device_id') || '';
+      localStorage.clear();
+      Object.keys(backup).forEach(k => localStorage.setItem(k, backup[k]));
+      // Restore license + device so app doesn't lock
+      if(licenseKey) localStorage.setItem('apex_license_key', licenseKey);
+      if(deviceId) localStorage.setItem('apex_device_id', deviceId);
+      toast('✓ Data restored! Reloading...');
+      setTimeout(()=>location.reload(), 1200);
+    } catch(err) {
+      toast('❌ Restore failed: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function delT(id){trades=trades.filter(t=>t.id!=id);save();renderTbl();updStats();toast('Deleted');}
 function save(){saveJournals();}
+
+function exportJournalJSON(jid){
+  const j = journals.find(j=>j.id===jid);
+  if(!j){ toast('Journal not found'); return; }
+  if(!j.trades||!j.trades.length){ toast('No trades in '+j.name); return; }
+  const payload = { journal: j.name, exported: new Date().toISOString(), trades: j.trades };
+  const json = JSON.stringify(payload, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'APEX_' + j.name.replace(/[^a-z0-9]/gi,'_') + '_' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('✓ Exported: ' + j.name);
+}
+
+function exportJournalCSV(){
+  const j=journals.find(j=>j.id===activeJournalId);
+  const jName=(j?j.name:'Journal').replace(/[^a-z0-9]/gi,'_');
+  const jTrades=j?[...j.trades]:[];
+  if(!jTrades.length){toast('No trades to export');return;}
+
+  const headers=['#','Pair','Direction','Entry Date','Exit Date','Stop Loss','Grade','Trading Plan','Strategy','Status','P&L / Outcome','Mistake Tags','Reasons','Mood','Before Screenshot','After Screenshot'];
+  const rows=jTrades.map((t,i)=>[
+    i+1,
+    t.instrument||t.pair||'',
+    t.direction||'',
+    t.entryDate||'',
+    t.exitDate||'',
+    t.sl||'',
+    t.grade||'',
+    t.tradingPlan||'',
+    t.setup||'',
+    t.status||'',
+    t.rr||'',
+    t.mistakeTag||'',
+    (t.reasons||'').replace(/"/g,"'"),
+    t.mood||'',
+    t.beforeSS||'',
+    t.afterSS||''
+  ]);
+
+  const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='APEX_'+jName+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('✓ Exported: '+jTrades.length+' trades');
+}
+
+function importJournalCSV(event){
+  const file = event.target.files[0];
+  if(!file){return;}
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const text = e.target.result;
+      const lines = text.split('\n').filter(l=>l.trim());
+      if(lines.length < 2){toast('❌ CSV empty or invalid');return;}
+
+      // Parse header row
+      const parseRow = (line) => {
+        const cols = []; let cur = ''; let inQ = false;
+        for(let i=0;i<line.length;i++){
+          const ch = line[i];
+          if(ch==='"'){inQ=!inQ;}
+          else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
+          else{cur+=ch;}
+        }
+        cols.push(cur.trim());
+        return cols.map(c=>c.replace(/^"|"$/g,'').replace(/""/g,'"'));
+      };
+
+      const headers = parseRow(lines[0]).map(h=>h.toLowerCase());
+      const col = (row, name) => {
+        const idx = headers.indexOf(name);
+        return idx>=0 ? (row[idx]||'') : '';
+      };
+
+      const imported = [];
+      for(let i=1;i<lines.length;i++){
+        const row = parseRow(lines[i]);
+        if(!row.length||!row[0]) continue;
+        imported.push({
+          id: Date.now()+'_'+Math.random().toString(36).substr(2,9),
+          instrument: col(row,'pair')||col(row,'instrument')||'',
+          direction:  col(row,'direction')||'Long',
+          entryDate:  col(row,'entry date')||'',
+          exitDate:   col(row,'exit date')||'',
+          sl:         col(row,'stop loss')||'',
+          grade:      col(row,'grade')||'',
+          tradingPlan:col(row,'trading plan')||'',
+          setup:      col(row,'strategy')||'',
+          status:     col(row,'status')||'Pending',
+          rr:         col(row,'p&l / outcome')||col(row,'risk/reward')||'',
+          mistakeTag: col(row,'mistake tags')||'',
+          reasons:    col(row,'reasons')||'',
+          mood:       col(row,'mood')||'',
+          beforeSS:   col(row,'before screenshot')||'',
+          afterSS:    col(row,'after screenshot')||''
+        });
+      }
+
+      if(!imported.length){toast('❌ No valid trades found');return;}
+
+      const mode = confirm(
+        imported.length+' trades found.\n\nOK = Add to current journal (merge)\nCancel = Replace current journal trades'
+      );
+
+      const j = journals.find(j=>j.id===activeJournalId);
+      if(!j){toast('❌ No active journal');return;}
+
+      if(mode){
+        trades = [...trades, ...imported];
+      } else {
+        trades = imported;
+      }
+      saveJournals();
+      trades = getJournalTrades();
+      renderTbl();
+      updStats();
+      toast('✓ Imported '+imported.length+' trades');
+    } catch(err){
+      toast('❌ Import failed: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value='';
+}
 
 function renderTbl(){
   const tb=$('tbl');
@@ -2341,7 +2538,7 @@ function closeThemePicker(){
 // EDIT TRADE
 let editingId=null;
 function editT(id){
-  const t=trades.find(t=>t.id===id);if(!t)return;
+  const t=trades.find(t=>t.id==id);if(!t)return;
   editingId=id;
   if($('ef-pair'))$('ef-pair').value=t.instrument||'';
   if($('ef-dir'))$('ef-dir').value=t.direction||'Long';
