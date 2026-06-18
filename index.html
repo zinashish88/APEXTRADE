@@ -741,8 +741,8 @@
 
       <!-- Tabs -->
       <div class="guide-tabs">
-        <button class="guide-tab active" onclick="switchGuide('buy')">🛒 How to Buy</button>
-        <button class="guide-tab" onclick="switchGuide('use')">📖 How to Use</button>
+        <button class="guide-tab active" onclick="switchGuide('buy', this)">🛒 How to Buy</button>
+        <button class="guide-tab" onclick="switchGuide('use', this)">📖 How to Use</button>
       </div>
 
       <!-- How to Buy -->
@@ -1035,21 +1035,18 @@
   }
 
   function scrollToGuide(tab) {
-    // Switch to correct tab
     document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
     document.querySelector('#guide-' + tab).classList.add('active');
     document.querySelectorAll('.guide-tab')[tab === 'buy' ? 0 : 1].classList.add('active');
-
-    // Smooth scroll to guide section
     document.getElementById('guide').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function switchGuide(tab) {
+  function switchGuide(tab, el) {
     document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
     document.querySelector(`#guide-${tab}`).classList.add('active');
-    event.target.classList.add('active');
+    if(el) el.classList.add('active');
   }
 
   function toggleFaq(btn) {
