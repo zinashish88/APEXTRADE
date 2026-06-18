@@ -937,6 +937,7 @@
 <script>
   const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytUMZjFoOOlJE04cEb4DP8nOYZ-bP8Z3AvAogoomlf0dqb9lQ6MOVzslGUzPXt1Cm3/exec";
+  const API_TOKEN = "APEX_S3CR3T_T0K3N_ZIN88";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
   let currentRef = '';
 
@@ -981,7 +982,7 @@
     btn.innerHTML = '⏳ Creating payment...';
     btn.disabled = true;
     try {
-      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref));
+      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&token=' + API_TOKEN);
       const data = await res.json();
       if (data.success && data.invoice_url) {
         window.location.href = data.invoice_url;
@@ -1198,13 +1199,7 @@
 
   async function fetchKeysAndShow(paymentId) {
     try {
-      const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId));
-      const data = await res.json();
-      if (data.success && data.keys && data.keys.length > 0) {
-        showSuccessPopup(data.keys);
-      } else {
-        // Webhook not processed yet — retry after 10 more seconds
-        setTimeout(() => fetchKeysAndShowRetry(paymentId), 10000);
+      const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId) + '&token=' + API_TOKEN);
       }
     } catch(err) {
       setTimeout(() => fetchKeysAndShowRetry(paymentId), 10000);
@@ -1213,10 +1208,7 @@
 
   async function fetchKeysAndShowRetry(paymentId) {
     try {
-      const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId));
-      const data = await res.json();
-      if (data.success && data.keys && data.keys.length > 0) {
-        showSuccessPopup(data.keys);
+      const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId) + '&token=' + API_TOKEN);
       } else {
         // Fallback — generate keys locally if webhook failed
         showSuccessPopup(generateKeys(7));
@@ -1295,7 +1287,7 @@ IMPORTANT:
     status.textContent = '';
 
     try {
-      const res = await fetch(SCRIPT_URL + '?action=sendEmail&email=' + encodeURIComponent(email) + '&keys=' + encodeURIComponent(JSON.stringify(keys)));
+      const res = await fetch(SCRIPT_URL + '?action=sendEmail&email=' + encodeURIComponent(email) + '&keys=' + encodeURIComponent(JSON.stringify(keys)) + '&token=' + API_TOKEN);
       const data = await res.json();
       if (data.success) {
         status.style.color = '#00ff88';
