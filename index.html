@@ -463,10 +463,6 @@
             <div class="pulse"></div>
             <span><strong id="liveUserCount">3,082</strong> traders using ApexTrade</span>
           </div>
-          <div class="live-users-bar" style="flex:1;margin-bottom:0;border-color:rgba(255,165,0,0.3);background:rgba(255,165,0,0.06);">
-            <div class="pulse" style="background:#FFA500;"></div>
-            <span style="color:#ccc;"><strong id="todayCount" style="color:#FFA500;">37</strong> purchased today</span>
-          </div>
         </div>
         <div class="urgency-bar">🔥 LIMITED TIME OFFER — ENDS SOON</div>
 
@@ -1305,18 +1301,6 @@ IMPORTANT:
   }
 
   function setupLiveStats() {
-    // Today purchased — starts random 25-50, increments by 1 every 5 min, resets to 25 after 50
-    let todayPurchased = Math.floor(Math.random() * 26) + 25;
-    const todayEl = document.getElementById('todayCount');
-    if (todayEl) {
-      todayEl.textContent = todayPurchased;
-      setInterval(() => {
-        todayPurchased += 1;
-        if (todayPurchased > 50) todayPurchased = 25;
-        todayEl.textContent = todayPurchased;
-      }, 300000); // every 5 minutes
-    }
-
     // Live user counter — increments by 1 every 30 seconds
     let userCount = 3082;
     setInterval(() => {
