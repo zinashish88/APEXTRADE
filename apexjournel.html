@@ -4642,7 +4642,8 @@ function anlSetResult(id, result){
 </div>
 
 <script>
-const APEX_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyym2krNttTcCDS7kcVFbD5XEmn_-qG5DB4EbiXamY82SJYB1bGf_0-rqE5Myikxt21/exec";
+const APEX_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytUMZjFoOOlJE04cEb4DP8nOYZ-bP8Z3AvAogoomlf0dqb9lQ6MOVzslGUzPXt1Cm3/exec";
+const APEX_API_TOKEN = "APEX_S3CR3T_T0K3N_ZIN88";
 
 // Auto format key input
 document.getElementById('licKeyInput').addEventListener('input', function(e) {
@@ -4692,7 +4693,7 @@ async function verifyLicenseKey() {
 
   try {
     const deviceId = getDeviceId();
-    const res = await fetch(APEX_SCRIPT_URL + '?action=verifyKey&key=' + encodeURIComponent(key) + '&device=' + encodeURIComponent(deviceId));
+    const res = await fetch(APEX_SCRIPT_URL + '?action=verifyKey&key=' + encodeURIComponent(key) + '&device=' + encodeURIComponent(deviceId) + '&token=' + APEX_API_TOKEN);
     const data = await res.json();
 
     if (data.valid) {
