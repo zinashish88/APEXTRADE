@@ -233,6 +233,12 @@
   .guide-tab.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:700; }
   .guide-content { display:none; }
   .guide-content.active { display:block; }
+  input[name=guide-tab] { display:none; }
+  .guide-content { display:none; }
+  #tab-buy:checked ~ .guide-tabs label[for="tab-buy"],
+  #tab-use:checked ~ .guide-tabs label[for="tab-use"] { background:var(--accent); color:#000; border-color:var(--accent); font-weight:700; }
+  #tab-buy:checked ~ .guide-wrap #guide-buy { display:block; }
+  #tab-use:checked ~ .guide-wrap #guide-use { display:block; }
   .guide-steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
   .guide-step { background:var(--bg1); border:1px solid var(--border); border-radius:16px; padding:28px; position:relative; transition:all 0.2s; }
   .guide-step:hover { border-color:var(--accent); transform:translateY(-2px); }
@@ -511,11 +517,6 @@
           <div class="price-equiv">= Just $0.027/day for a year 🤯</div>
         </div>
 
-        <div style="text-align:center;margin-bottom:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#4A9EFF;letter-spacing:2px;font-weight:700;background:rgba(74,158,255,0.08);padding:8px 14px;border-radius:20px;border:1px solid rgba(74,158,255,0.35);">🇮🇳 FOR INDIAN USERS</div>
-        <button class="buy-btn-big" id="buyBtnBig" style="background:linear-gradient(135deg,#1a6fd4,#4A9EFF);box-shadow:0 8px 32px rgba(74,158,255,0.3);" onclick="openCheckout()">🇮🇳 Pay with UPI — $10</button>
-        <div style="margin:28px 0 12px;text-align:center;">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#F7931A;letter-spacing:2px;font-weight:700;background:rgba(247,147,26,0.08);padding:8px 14px;border-radius:20px;border:1px solid rgba(247,147,26,0.35);">🌍 WORLDWIDE CRYPTO USERS</span>
-        </div>
         <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto (USDT) — $10</button>
         <div class="ref-badge" id="refBadge"></div>
 
@@ -739,14 +740,17 @@
       <h2 class="section-title">How It Works</h2>
       <p class="section-sub" style="text-align:center;color:var(--muted);margin-bottom:32px;">Everything you need to get started in minutes</p>
 
+      <input type="radio" name="guide-tab" id="tab-buy" checked>
+      <input type="radio" name="guide-tab" id="tab-use">
       <!-- Tabs -->
       <div class="guide-tabs">
-        <button class="guide-tab active" onclick="switchGuide('buy', this)">🛒 How to Buy</button>
-        <button class="guide-tab" onclick="switchGuide('use', this)">📖 How to Use</button>
+        <label for="tab-buy" class="guide-tab">🛒 How to Buy</label>
+        <label for="tab-use" class="guide-tab">📖 How to Use</label>
       </div>
+      <div class="guide-wrap">
 
       <!-- How to Buy -->
-      <div class="guide-content active" id="guide-buy">
+      <div class="guide-content" id="guide-buy">
         <div class="guide-steps">
 
           <div class="guide-step">
@@ -754,14 +758,14 @@
             <div class="guide-step-num">1</div>
             <div class="guide-step-title">Visit Website</div>
             <div class="guide-step-desc">Go to our website and scroll down to the pricing section. You'll see two payment options based on your location.</div>
-            <div class="guide-step-tip">💡 Indian users → UPI/Card | International → Crypto (USDT)</div>
+            <div class="guide-step-tip">💡 One-time crypto payment — $10 USDT</div>
           </div>
 
           <div class="guide-step">
             <div class="guide-step-icon">💳</div>
             <div class="guide-step-num">2</div>
             <div class="guide-step-title">Choose Payment</div>
-            <div class="guide-step-desc">Click your preferred payment button. Indian users pay via UPI, Debit/Credit Card through Razorpay. International users pay $10 USDT via crypto.</div>
+            <div class="guide-step-desc">Click the payment button and pay $10 USDT via crypto.</div>
             <div class="guide-step-tip">💡 One-time payment of $10 — no subscriptions!</div>
           </div>
 
@@ -770,7 +774,7 @@
             <div class="guide-step-num">3</div>
             <div class="guide-step-title">Complete Payment</div>
             <div class="guide-step-desc">Complete your payment securely. A success popup will appear on the website immediately after payment confirmation.</div>
-            <div class="guide-step-tip">💡 Payment is secured by Razorpay / Plisio (Crypto)</div>
+            <div class="guide-step-tip">💡 Payment is secured by Plisio (Crypto)</div>
           </div>
 
           <div class="guide-step">
@@ -855,6 +859,7 @@
         </div>
       </div>
 
+      </div><!-- end guide-wrap -->
     </div>
   </section>
 
@@ -1193,6 +1198,11 @@
   async function fetchKeysAndShow(paymentId) {
     try {
       const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId) + '&token=' + API_TOKEN);
+      const data = await res.json();
+      if (data.success && data.keys && data.keys.length > 0) {
+        showSuccessPopup(data.keys);
+      } else {
+        setTimeout(() => fetchKeysAndShowRetry(paymentId), 10000);
       }
     } catch(err) {
       setTimeout(() => fetchKeysAndShowRetry(paymentId), 10000);
@@ -1202,6 +1212,9 @@
   async function fetchKeysAndShowRetry(paymentId) {
     try {
       const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId) + '&token=' + API_TOKEN);
+      const data = await res.json();
+      if (data.success && data.keys && data.keys.length > 0) {
+        showSuccessPopup(data.keys);
       } else {
         // Fallback — generate keys locally if webhook failed
         showSuccessPopup(generateKeys(7));
