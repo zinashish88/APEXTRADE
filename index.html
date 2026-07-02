@@ -1097,10 +1097,14 @@
   }
 
   function showSuccessPopupLoading() {
-    // Show waiting popup with countdown
     const waitingEl = document.getElementById('waitingPopup');
     const countEl = document.getElementById('waitingCount');
     const barEl = document.getElementById('waitingBar');
+
+    // Get paymentId from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentId = urlParams.get('payment_id') || urlParams.get('txn_id') || '';
+    if (paymentId) window._paymentId = paymentId;
 
     waitingEl.classList.add('show');
     let secs = 5;
@@ -1120,20 +1124,20 @@
       if (progress >= 100) {
         clearInterval(interval);
         waitingEl.classList.remove('show');
-        // Show success popup after waiting
-        document.getElementById('successPopup').style.display = 'flex';
-        document.getElementById('downloadKeysBtn').textContent = '⏳ Preparing your keys...';
-        document.getElementById('downloadKeysBtn').disabled = true;
+        // Agar paymentId hai toh Sheet se keys fetch karo
+        if (paymentId) {
+          fetchKeysAndShow(paymentId);
+        } else {
+          document.getElementById('successPopup').style.display = 'flex';
+        }
       }
-    }, 100); // 100ms * 50 = 5 seconds
+    }, 100);
   }
 
   function showSuccessPopup(keys) {
     window._licenseKeys = keys;
     localStorage.setItem('apextrade_success', JSON.stringify({ keys: keys, ts: Date.now() }));
     document.getElementById('successPopup').style.display = 'flex';
-    document.getElementById('downloadKeysBtn').textContent = '🔑 Download License Keys';
-    document.getElementById('downloadKeysBtn').disabled = false;
   }
 
   async function fetchKeysAndShow(paymentId) {
