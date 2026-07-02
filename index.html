@@ -1137,6 +1137,7 @@
   }
 
   async function fetchKeysAndShow(paymentId) {
+    window._paymentId = paymentId;
     try {
       const res = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(paymentId) + '&token=' + API_TOKEN);
       const data = await res.json();
@@ -1157,11 +1158,11 @@
       if (data.success && data.keys && data.keys.length > 0) {
         showSuccessPopup(data.keys);
       } else {
-        // Fallback — generate keys locally if webhook failed
-        showSuccessPopup(generateKeys(7));
+        // Webhook delay — show popup with empty keys, user can still get email after webhook processes
+        showSuccessPopup([]);
       }
     } catch(err) {
-      showSuccessPopup(generateKeys(7));
+      showSuccessPopup([]);
     }
   }
 
@@ -1226,8 +1227,27 @@ IMPORTANT:
       return;
     }
 
-    const keys = window._licenseKeys || generateKeys(7);
-    window._licenseKeys = keys;
+    let keys = window._licenseKeys || [];
+
+    // Agar keys nahi hain toh payment ID se Sheet se fetch karo
+    if (keys.length === 0 && window._paymentId) {
+      try {
+        const r = await fetch(SCRIPT_URL + '?action=getKeys&paymentId=' + encodeURIComponent(window._paymentId) + '&token=' + API_TOKEN);
+        const d = await r.json();
+        if (d.success && d.keys && d.keys.length > 0) {
+          keys = d.keys;
+          window._licenseKeys = keys;
+        }
+      } catch(e) {}
+    }
+
+    if (keys.length === 0) {
+      status.style.color = '#ff4444';
+      status.textContent = '⚠️ Keys not found. Please contact support: zinashish88@gmail.com';
+      btn.disabled = false;
+      btn.textContent = '✉️ Send Journal & Keys to Email';
+      return;
+    }
 
     btn.disabled = true;
     btn.textContent = '⏳ Sending...';
