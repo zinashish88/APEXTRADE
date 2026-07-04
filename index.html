@@ -947,23 +947,35 @@
   }
 
   async function openCryptoCheckout() {
+    // Collect email before payment — needed for automatic delivery
+    const email = prompt('Enter your email address to receive your journal and license keys after payment:');
+    if (!email || !email.includes('@')) {
+      alert('Please enter a valid email address. Your keys will be sent there after payment.');
+      return;
+    }
+    const emailConfirm = prompt('Confirm your email address:');
+    if (email.trim().toLowerCase() !== emailConfirm.trim().toLowerCase()) {
+      alert('Emails do not match. Please try again.');
+      return;
+    }
+
     const ref = getRefCode() || 'direct';
     const btn = document.getElementById('cryptoBtn');
     btn.innerHTML = '⏳ Creating payment...';
     btn.disabled = true;
     try {
-      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&token=' + API_TOKEN);
+      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email.trim()) + '&token=' + API_TOKEN);
       const data = await res.json();
       if (data.success && data.invoice_url) {
         window.location.href = data.invoice_url;
       } else {
         alert('Error creating payment. Please try again.');
-        btn.innerHTML = '₮ Pay with USDT — $2';
+        btn.innerHTML = '₮ Pay with Crypto — $2';
         btn.disabled = false;
       }
     } catch(err) {
       alert('Error: ' + err.message);
-      btn.innerHTML = '₮ Pay with USDT — $2';
+      btn.innerHTML = '₮ Pay with Crypto — $2';
       btn.disabled = false;
     }
   }
@@ -1291,14 +1303,7 @@ IMPORTANT:
 
   if(new URLSearchParams(window.location.search).get('payment') === 'success') {
     setTimeout(() => {
-      showSuccessPopupLoading();
-    }, 500);
-  }
-  // Show download popup only if ?download=1 in URL (payment redirect)
-  const urlParams = new URLSearchParams(window.location.search);
-  if(urlParams.get('download') === '1') {
-    setTimeout(() => {
-      showSuccessPopupLoading();
+      document.getElementById('successPopup').style.display = 'flex';
     }, 500);
   }
   if (new URLSearchParams(window.location.search).get('affiliate') === '1') showPage('affiliate');
@@ -1319,21 +1324,16 @@ IMPORTANT:
 </div>
 
 <div class="popup-overlay" id="successPopup">
-  <div class="popup-box" style="max-width:400px;width:92%;max-height:90vh;overflow-y:auto;">
+  <div class="popup-box" style="max-width:400px;width:92%;text-align:center;padding:40px 32px;">
     <div class="popup-icon">🎉</div>
     <div class="popup-title">PAYMENT SUCCESSFUL!</div>
-    <div class="popup-sub">Welcome to ApexTrade Journal! Your lifetime access is ready.</div>
-
-    <!-- Email Section -->
-    <input type="email" class="popup-email-input" id="popupEmail" placeholder="Enter your email address" />
-    <input type="email" class="popup-email-input" id="popupEmailConfirm" placeholder="Confirm your email address" />
-    <button class="popup-send-btn" id="popupSendBtn" onclick="sendEmailWithKeys()">
-      ✉️ Send Journal & Keys to Email
-    </button>
-    <div class="popup-email-status" id="popupEmailStatus"></div>
-
+    <div class="popup-sub" style="margin:16px 0 24px;">Your journal and license keys are being sent to your email.</div>
+    <div style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:16px;margin-bottom:24px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#00ff88;line-height:1.6;">
+      📧 Check your inbox in 1–2 minutes<br>
+      <span style="color:#aaa;font-size:11px;">Also check your spam/promotions folder</span>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;">Didn't receive the email? Contact us at<br><a href="mailto:zinashish88@gmail.com" style="color:#00ff88;">zinashish88@gmail.com</a></div>
     <button class="popup-close" onclick="closeSuccessPopup()">✕ Close</button>
-    <div class="popup-note">📌 Check your inbox for the download link and license keys</div>
   </div>
 </div>
 
