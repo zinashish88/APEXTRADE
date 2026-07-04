@@ -516,6 +516,13 @@
           <div class="price-equiv">= Just $0.0055/day for a year 🤯</div>
         </div>
 
+        <!-- Email collection before payment -->
+        <div style="margin-bottom:12px;">
+          <input type="email" id="buyEmail" placeholder="Your email address" style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:8px;" />
+          <input type="email" id="buyEmailConfirm" placeholder="Confirm email address" style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;box-sizing:border-box;" />
+          <div id="buyEmailError" style="color:#ff4444;font-size:11px;font-family:'JetBrains Mono',monospace;margin-top:6px;display:none;"></div>
+        </div>
+
         <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $2</button>
         <div class="ref-badge" id="refBadge"></div>
 
@@ -947,15 +954,22 @@
   }
 
   async function openCryptoCheckout() {
-    // Collect email before payment — needed for automatic delivery
-    const email = prompt('Enter your email address to receive your journal and license keys after payment:');
-    if (!email || !email.includes('@')) {
-      alert('Please enter a valid email address. Your keys will be sent there after payment.');
+    const email = document.getElementById('buyEmail').value.trim();
+    const emailConfirm = document.getElementById('buyEmailConfirm').value.trim();
+    const errEl = document.getElementById('buyEmailError');
+
+    errEl.style.display = 'none';
+
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      errEl.textContent = '⚠️ Please enter a valid email address.';
+      errEl.style.display = 'block';
+      document.getElementById('buyEmail').focus();
       return;
     }
-    const emailConfirm = prompt('Confirm your email address:');
-    if (email.trim().toLowerCase() !== emailConfirm.trim().toLowerCase()) {
-      alert('Emails do not match. Please try again.');
+    if (email.toLowerCase() !== emailConfirm.toLowerCase()) {
+      errEl.textContent = '⚠️ Emails do not match.';
+      errEl.style.display = 'block';
+      document.getElementById('buyEmailConfirm').focus();
       return;
     }
 
@@ -964,7 +978,7 @@
     btn.innerHTML = '⏳ Creating payment...';
     btn.disabled = true;
     try {
-      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email.trim()) + '&token=' + API_TOKEN);
+      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email) + '&token=' + API_TOKEN);
       const data = await res.json();
       if (data.success && data.invoice_url) {
         window.location.href = data.invoice_url;
