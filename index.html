@@ -524,6 +524,28 @@
         </div>
 
         <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $2</button>
+        <div id="emailPreview" style="display:none;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff88;margin-top:8px;opacity:0.8;">📧 Keys will be sent to: <span id="emailPreviewVal"></span></div>
+
+<!-- Pre-payment info popup -->
+<div id="prePayPopup" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#0d1117;border:1px solid rgba(0,255,136,0.3);border-radius:16px;padding:36px 32px;max-width:420px;width:92%;text-align:center;box-shadow:0 0 40px rgba(0,255,136,0.1);">
+    <div style="font-size:40px;margin-bottom:16px;">🔐</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:900;color:#00ff88;letter-spacing:2px;margin-bottom:12px;">SECURE CHECKOUT</div>
+    <div style="font-size:13px;color:#aaa;line-height:1.7;margin-bottom:24px;">
+      After payment confirmation, your<br>
+      <span style="color:#fff;font-weight:700;">ApexTrade Journal + 7 License Keys</span><br>
+      will be <span style="color:#00ff88;font-weight:700;">automatically sent to your email.</span><br>
+      <span style="font-size:11px;color:#888;margin-top:6px;display:block;">📬 Check your inbox & spam folder after payment.</span>
+    </div>
+    <div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:12px 16px;margin-bottom:24px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff88;">
+      📧 Sending to: <span id="prePayEmail" style="color:#fff;"></span>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('prePayPopup').style.display='none'" style="flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#aaa;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;letter-spacing:1px;">✕ CANCEL</button>
+      <button onclick="proceedToInvoice()" style="flex:2;padding:12px;background:linear-gradient(135deg,#c47000,#F7931A);border:none;border-radius:8px;color:#000;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:900;cursor:pointer;letter-spacing:1px;">₮ PROCEED TO PAYMENT</button>
+    </div>
+  </div>
+</div>
         <div class="ref-badge" id="refBadge"></div>
 
         <div class="trust-row">
@@ -973,6 +995,16 @@
       return;
     }
 
+    // Show pre-payment confirmation popup
+    document.getElementById('prePayEmail').textContent = email;
+    const popup = document.getElementById('prePayPopup');
+    popup.style.display = 'flex';
+  }
+
+  async function proceedToInvoice() {
+    const email = document.getElementById('buyEmail').value.trim();
+    document.getElementById('prePayPopup').style.display = 'none';
+
     const ref = getRefCode() || 'direct';
     const btn = document.getElementById('cryptoBtn');
     btn.innerHTML = '⏳ Creating payment...';
@@ -981,6 +1013,7 @@
       const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email) + '&token=' + API_TOKEN);
       const data = await res.json();
       if (data.success && data.invoice_url) {
+        localStorage.setItem('apex_payment_pending', '1');
         window.location.href = data.invoice_url;
       } else {
         alert('Error creating payment. Please try again.');
@@ -992,6 +1025,22 @@
       btn.innerHTML = '₮ Pay with Crypto — $2';
       btn.disabled = false;
     }
+  }
+
+  // Live email preview
+  const buyEmailEl = document.getElementById('buyEmail');
+  if(buyEmailEl){
+    buyEmailEl.addEventListener('input', function(){
+      const v = this.value.trim();
+      const preview = document.getElementById('emailPreview');
+      const previewVal = document.getElementById('emailPreviewVal');
+      if(v.includes('@') && v.includes('.')){
+        previewVal.textContent = v;
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    });
   }
 
   function setupTicker() {
@@ -1315,7 +1364,8 @@ IMPORTANT:
     setTimeout(() => downloadJournal(), 500);
   }
 
-  if(new URLSearchParams(window.location.search).get('payment') === 'success') {
+  if(new URLSearchParams(window.location.search).get('payment') === 'success' || localStorage.getItem('apex_payment_pending') === '1') {
+    localStorage.removeItem('apex_payment_pending');
     setTimeout(() => {
       document.getElementById('successPopup').style.display = 'flex';
     }, 500);
@@ -1340,13 +1390,17 @@ IMPORTANT:
 <div class="popup-overlay" id="successPopup">
   <div class="popup-box" style="max-width:400px;width:92%;text-align:center;padding:40px 32px;">
     <div class="popup-icon">🎉</div>
-    <div class="popup-title">PAYMENT SUCCESSFUL!</div>
-    <div class="popup-sub" style="margin:16px 0 24px;">Your journal and license keys are being sent to your email.</div>
-    <div style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:16px;margin-bottom:24px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#00ff88;line-height:1.6;">
-      📧 Check your inbox in 1–2 minutes<br>
-      <span style="color:#aaa;font-size:11px;">Also check your spam/promotions folder</span>
+    <div class="popup-title">Payment Successful?</div>
+    <div style="font-size:14px;color:#ccc;line-height:1.8;margin:16px 0 24px;">
+      If you have completed your payment,<br>
+      please check your <span style="color:#00ff88;font-weight:700;">email inbox</span> or <span style="color:#00ff88;font-weight:700;">spam folder</span><br>
+      for your ApexTrade Journal and License Keys.
     </div>
-    <div style="font-size:12px;color:#888;margin-bottom:20px;">Didn't receive the email? Contact us at<br><a href="mailto:zinashish88@gmail.com" style="color:#00ff88;">zinashish88@gmail.com</a></div>
+    <div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:12px 16px;margin-bottom:24px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#aaa;line-height:1.6;">
+      📬 Email may take 1–2 minutes to arrive.<br>
+      Didn't receive it? Contact us at<br>
+      <a href="mailto:zinashish88@gmail.com" style="color:#00ff88;">zinashish88@gmail.com</a>
+    </div>
     <button class="popup-close" onclick="closeSuccessPopup()">✕ Close</button>
   </div>
 </div>
