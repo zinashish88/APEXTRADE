@@ -524,6 +524,9 @@
         </div>
 
         <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $2</button>
+        <div id="payProgressWrap" style="display:none;margin-top:10px;background:rgba(255,255,255,0.06);border-radius:20px;height:4px;overflow:hidden;">
+          <div id="payProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#c47000,#F7931A);border-radius:20px;transition:width 0.2s ease;"></div>
+        </div>
         <div id="emailPreview" style="display:none;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#00ff88;margin-top:8px;opacity:0.8;">📧 Keys will be sent to: <span id="emailPreviewVal"></span></div>
 
 <!-- Pre-payment info popup -->
@@ -1009,21 +1012,40 @@
     const btn = document.getElementById('cryptoBtn');
     btn.innerHTML = '⏳ Creating payment...';
     btn.disabled = true;
+
+    // Start progress bar
+    const wrap = document.getElementById('payProgressWrap');
+    const bar = document.getElementById('payProgressBar');
+    wrap.style.display = 'block';
+    let prog = 0;
+    const interval = setInterval(() => {
+      prog += 2;
+      if(prog > 90) prog = 90; // hold at 90% until response
+      bar.style.width = prog + '%';
+    }, 80);
+
     try {
       const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email) + '&token=' + API_TOKEN);
       const data = await res.json();
+      clearInterval(interval);
+      bar.style.width = '100%';
       if (data.success && data.invoice_url) {
         localStorage.setItem('apex_payment_pending', '1');
-        window.location.href = data.invoice_url;
+        setTimeout(() => { window.location.href = data.invoice_url; }, 200);
       } else {
         alert('Error creating payment. Please try again.');
         btn.innerHTML = '₮ Pay with Crypto — $2';
         btn.disabled = false;
+        wrap.style.display = 'none';
+        bar.style.width = '0%';
       }
     } catch(err) {
+      clearInterval(interval);
       alert('Error: ' + err.message);
       btn.innerHTML = '₮ Pay with Crypto — $2';
       btn.disabled = false;
+      wrap.style.display = 'none';
+      bar.style.width = '0%';
     }
   }
 
