@@ -234,11 +234,6 @@
   .guide-content { display:none; }
   .guide-content.active { display:block; }
   input[name=guide-tab] { display:none; }
-  .guide-content { display:none; }
-  #tab-buy:checked ~ .guide-tabs label[for="tab-buy"],
-  #tab-use:checked ~ .guide-tabs label[for="tab-use"] { background:var(--accent); color:#000; border-color:var(--accent); font-weight:700; }
-  #tab-buy:checked ~ .guide-wrap #guide-buy { display:block; }
-  #tab-use:checked ~ .guide-wrap #guide-use { display:block; }
   .guide-steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
   .guide-step { background:var(--bg1); border:1px solid var(--border); border-radius:16px; padding:28px; position:relative; transition:all 0.2s; }
   .guide-step:hover { border-color:var(--accent); transform:translateY(-2px); }
@@ -762,45 +757,45 @@
       <input type="radio" name="guide-tab" id="tab-use">
       <!-- Tabs -->
       <div class="guide-tabs">
-        <label for="tab-buy" class="guide-tab">🛒 How to Buy</label>
-        <label for="tab-use" class="guide-tab">📖 How to Use</label>
+        <label class="guide-tab active" onclick="switchGuideTab('buy', this)">🛒 How to Buy</label>
+        <label class="guide-tab" onclick="switchGuideTab('use', this)">📖 How to Use</label>
       </div>
       <div class="guide-wrap">
 
       <!-- How to Buy -->
-      <div class="guide-content" id="guide-buy">
+      <div class="guide-content active" id="guide-buy">
         <div class="guide-steps">
 
           <div class="guide-step">
-            <div class="guide-step-icon">🌐</div>
+            <div class="guide-step-icon">📧</div>
             <div class="guide-step-num">1</div>
-            <div class="guide-step-title">Visit Website</div>
-            <div class="guide-step-desc">Go to our website and scroll down to the pricing section. You'll see two payment options based on your location.</div>
-            <div class="guide-step-tip">💡 One-time crypto payment — $2 USDT</div>
+            <div class="guide-step-title">Enter Your Email</div>
+            <div class="guide-step-desc">Scroll to the pricing section and enter your email address in both fields. Your journal and license keys will be sent here after payment.</div>
+            <div class="guide-step-tip">💡 Double-check your email — keys are sent automatically</div>
           </div>
 
           <div class="guide-step">
-            <div class="guide-step-icon">💳</div>
+            <div class="guide-step-icon">₮</div>
             <div class="guide-step-num">2</div>
-            <div class="guide-step-title">Choose Payment</div>
-            <div class="guide-step-desc">Click the payment button and pay $2 USDT via crypto.</div>
-            <div class="guide-step-tip">💡 One-time payment of $2 — no subscriptions!</div>
+            <div class="guide-step-title">Click Pay with Crypto</div>
+            <div class="guide-step-desc">Click the "Pay with Crypto" button. A confirmation popup will appear showing your email — click "Proceed to Payment" to continue.</div>
+            <div class="guide-step-tip">💡 One-time payment of $10 — no subscriptions!</div>
           </div>
 
           <div class="guide-step">
             <div class="guide-step-icon">✅</div>
             <div class="guide-step-num">3</div>
             <div class="guide-step-title">Complete Payment</div>
-            <div class="guide-step-desc">Complete your payment securely. A success popup will appear on the website immediately after payment confirmation.</div>
+            <div class="guide-step-desc">Complete your crypto payment securely on the Plisio payment page. Payment is confirmed automatically on the blockchain.</div>
             <div class="guide-step-tip">💡 Payment is secured by Plisio (Crypto)</div>
           </div>
 
           <div class="guide-step">
-            <div class="guide-step-icon">📧</div>
+            <div class="guide-step-icon">📬</div>
             <div class="guide-step-num">4</div>
-            <div class="guide-step-title">Receive on Email</div>
-            <div class="guide-step-desc">In the success popup, enter your email to receive your journal download link and all 7 license keys directly in your inbox.</div>
-            <div class="guide-step-tip">💡 Check spam folder if email not received</div>
+            <div class="guide-step-title">Check Your Email</div>
+            <div class="guide-step-desc">After payment confirmation, your ApexTrade Journal file and 7 license keys are automatically sent to your email within 1–2 minutes.</div>
+            <div class="guide-step-tip">💡 Check spam or promotions folder if not received</div>
           </div>
 
         </div>
@@ -892,6 +887,9 @@
 <div id="affiliatePage" class="page">
   <div class="dash-wrapper">
     <div class="login-box" id="loginBox">
+      <div style="text-align:left;margin-bottom:20px;">
+        <button onclick="showPage('main')" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:#fff;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;letter-spacing:1px;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:8px;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='#fff'">← Back to Home</button>
+      </div>
       <div class="logo" style="font-size:26px;margin-bottom:4px;">Apex<span style="color:var(--text)">Trade</span></div>
       <div class="dash-logo-sub">Affiliate Dashboard</div>
       <div class="input-group">
@@ -1080,16 +1078,16 @@
   function scrollToGuide(tab) {
     document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
-    document.querySelector('#guide-' + tab).classList.add('active');
+    document.getElementById('guide-' + tab).classList.add('active');
     document.querySelectorAll('.guide-tab')[tab === 'buy' ? 0 : 1].classList.add('active');
     document.getElementById('guide').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function switchGuide(tab, el) {
+  function switchGuideTab(tab, el) {
     document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.guide-content').forEach(c => c.classList.remove('active'));
-    document.querySelector(`#guide-${tab}`).classList.add('active');
-    if(el) el.classList.add('active');
+    el.classList.add('active');
+    document.getElementById('guide-' + tab).classList.add('active');
   }
 
   function toggleFaq(btn) {
