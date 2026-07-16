@@ -508,7 +508,7 @@
               <div class="price-save">Save $20</div>
             </div>
           </div>
-          <div class="price-equiv">= Just $0.0055/day for a year 🤯</div>
+          <div class="price-equiv" style="color:#00ff88;font-size:13px;">📧 Your journal file and 7 license keys will be sent to your email automatically after payment<br><span style="color:#888;font-size:11px;">Check your inbox or spam folder</span></div>
         </div>
 
         <!-- Email collection before payment -->
@@ -553,6 +553,93 @@
           <span>✅ No Subscription</span>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <section class="guide-section" id="guide">
+    <div class="container">
+      <div class="section-label">GUIDE</div>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub" style="text-align:center;color:var(--muted);margin-bottom:32px;">Everything you need to get started in minutes</p>
+
+      <input type="radio" name="guide-tab" id="tab-buy" checked>
+      <input type="radio" name="guide-tab" id="tab-use">
+      <!-- Tabs -->
+      <div class="guide-tabs">
+        <label class="guide-tab active" onclick="switchGuideTab('buy', this)">🛒 How to Buy</label>
+        <label class="guide-tab" onclick="switchGuideTab('use', this)">📖 How to Use</label>
+      </div>
+      <div class="guide-wrap">
+
+      <!-- How to Buy -->
+      <div class="guide-content active" id="guide-buy">
+        <div class="guide-steps">
+
+          <div class="guide-step">
+            <div class="guide-step-icon">📧</div>
+            <div class="guide-step-num">1</div>
+            <div class="guide-step-title">Enter Your Email</div>
+            <div class="guide-step-desc">Enter your email address in the fields above the payment button.</div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-icon">₮</div>
+            <div class="guide-step-num">2</div>
+            <div class="guide-step-title">Pay with Crypto</div>
+            <div class="guide-step-desc">Click "Pay with Crypto" and complete the $10 USDT payment.</div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-icon">📬</div>
+            <div class="guide-step-num">3</div>
+            <div class="guide-step-title">Check Your Email</div>
+            <div class="guide-step-desc">Your journal file and 7 license keys will be sent to your email automatically. Check inbox and spam folder.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- How to Use -->
+      <div class="guide-content" id="guide-use">
+        <div class="guide-steps">
+
+          <div class="guide-step">
+            <div class="guide-step-icon">📂</div>
+            <div class="guide-step-num">1</div>
+            <div class="guide-step-title">Open Journal</div>
+            <div class="guide-step-desc">Download the file from email and open it in Chrome browser.</div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-icon">🔐</div>
+            <div class="guide-step-num">2</div>
+            <div class="guide-step-title">Enter License Key</div>
+            <div class="guide-step-desc">Enter any one of your 7 license keys to activate. One key per device.</div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-icon">🔖</div>
+            <div class="guide-step-num">3</div>
+            <div class="guide-step-title">Bookmark for Easy Access</div>
+            <div class="guide-step-desc">Bookmark the journal link in your browser so you can open it anytime with one click.</div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-icon">📝</div>
+            <div class="guide-step-num">4</div>
+            <div class="guide-step-title">Log Your Trades</div>
+            <div class="guide-step-desc">Click "Log Trade" to add trades. Fill in the details and save.</div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-step-icon">📊</div>
+            <div class="guide-step-num">5</div>
+            <div class="guide-step-title">Track & Improve</div>
+            <div class="guide-step-desc">Use Analytics and AI Coach tabs to review your performance and improve.</div>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
@@ -747,119 +834,6 @@
   <!-- ═══════════════════════════════════════════════════════ -->
   <!-- HOW TO GUIDE SECTION -->
   <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="guide-section" id="guide">
-    <div class="container">
-      <div class="section-label">GUIDE</div>
-      <h2 class="section-title">How It Works</h2>
-      <p class="section-sub" style="text-align:center;color:var(--muted);margin-bottom:32px;">Everything you need to get started in minutes</p>
-
-      <input type="radio" name="guide-tab" id="tab-buy" checked>
-      <input type="radio" name="guide-tab" id="tab-use">
-      <!-- Tabs -->
-      <div class="guide-tabs">
-        <label class="guide-tab active" onclick="switchGuideTab('buy', this)">🛒 How to Buy</label>
-        <label class="guide-tab" onclick="switchGuideTab('use', this)">📖 How to Use</label>
-      </div>
-      <div class="guide-wrap">
-
-      <!-- How to Buy -->
-      <div class="guide-content active" id="guide-buy">
-        <div class="guide-steps">
-
-          <div class="guide-step">
-            <div class="guide-step-icon">📧</div>
-            <div class="guide-step-num">1</div>
-            <div class="guide-step-title">Enter Your Email</div>
-            <div class="guide-step-desc">Scroll to the pricing section and enter your email address in both fields. Your journal and license keys will be sent here after payment.</div>
-            <div class="guide-step-tip">💡 Double-check your email — keys are sent automatically</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">₮</div>
-            <div class="guide-step-num">2</div>
-            <div class="guide-step-title">Click Pay with Crypto</div>
-            <div class="guide-step-desc">Click the "Pay with Crypto" button. A confirmation popup will appear showing your email — click "Proceed to Payment" to continue.</div>
-            <div class="guide-step-tip">💡 One-time payment of $10 — no subscriptions!</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">✅</div>
-            <div class="guide-step-num">3</div>
-            <div class="guide-step-title">Complete Payment</div>
-            <div class="guide-step-desc">Complete your crypto payment securely on the Plisio payment page. Payment is confirmed automatically on the blockchain.</div>
-            <div class="guide-step-tip">💡 Payment is secured by Plisio (Crypto)</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">📬</div>
-            <div class="guide-step-num">4</div>
-            <div class="guide-step-title">Check Your Email</div>
-            <div class="guide-step-desc">After payment confirmation, your ApexTrade Journal file and 7 license keys are automatically sent to your email within 1–2 minutes.</div>
-            <div class="guide-step-tip">💡 Check spam or promotions folder if not received</div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- How to Use -->
-      <div class="guide-content" id="guide-use">
-        <div class="guide-steps">
-
-          <div class="guide-step">
-            <div class="guide-step-icon">📂</div>
-            <div class="guide-step-num">1</div>
-            <div class="guide-step-title">Open Journal</div>
-            <div class="guide-step-desc">Open the downloaded ApexTrade Journal HTML file in Chrome browser. Works on mobile, tablet, and desktop — no installation needed.</div>
-            <div class="guide-step-tip">💡 Chrome browser recommended for best experience</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">🔐</div>
-            <div class="guide-step-num">2</div>
-            <div class="guide-step-title">Enter License Key</div>
-            <div class="guide-step-desc">A license key screen will appear. Enter any one of your 7 keys in APEX-XXXX-XXXX-XXXX format and click Activate. Each key works on one device only.</div>
-            <div class="guide-step-tip">💡 Use different key on each new device</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">📝</div>
-            <div class="guide-step-num">3</div>
-            <div class="guide-step-title">Log Your Trades</div>
-            <div class="guide-step-desc">Click "New Trade" to log your trades. Fill in instrument, direction, entry/exit price, quantity, strategy and your emotional state. Add notes for review.</div>
-            <div class="guide-step-tip">💡 Log trades daily for best insights</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">📊</div>
-            <div class="guide-step-num">4</div>
-            <div class="guide-step-title">View Analytics</div>
-            <div class="guide-step-desc">Go to Analytics tab to see your win rate, P&L charts, best/worst strategies, emotion heatmap, and weekly breakdown of your trading performance.</div>
-            <div class="guide-step-tip">💡 Filter by date range and instrument</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">🤖</div>
-            <div class="guide-step-num">5</div>
-            <div class="guide-step-title">Use AI Coach</div>
-            <div class="guide-step-desc">Go to AI Coach tab and chat with your personal trading coach. It analyzes your trades and gives personalized feedback on your patterns and psychology.</div>
-            <div class="guide-step-tip">💡 Ask about your biggest mistakes and patterns</div>
-          </div>
-
-          <div class="guide-step">
-            <div class="guide-step-icon">🔄</div>
-            <div class="guide-step-num">6</div>
-            <div class="guide-step-title">Review & Improve</div>
-            <div class="guide-step-desc">Use the weekly review feature to identify patterns, check your discipline score, and set goals for the next week. Consistent journaling = consistent profits.</div>
-            <div class="guide-step-tip">💡 Do weekly review every Sunday</div>
-          </div>
-
-        </div>
-      </div>
-
-      </div><!-- end guide-wrap -->
-    </div>
-  </section>
-
   <section class="faq">
     <div class="container">
       <div class="section-label">FAQ</div>
