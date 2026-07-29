@@ -501,8 +501,7 @@
           <div id="buyEmailError" style="color:#ff4444;font-size:11px;font-family:'JetBrains Mono',monospace;margin-top:6px;display:none;"></div>
         </div>
 
-        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout('plisio')" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $10</button>
-        <button class="crypto-btn" id="nowpaymentsBtn" onclick="openCryptoCheckout('nowpayments')" style="margin-top:10px;background:linear-gradient(135deg,#0b3d91,#1e90ff);border:none;box-shadow:0 8px 32px rgba(30,144,255,0.25);">⬡ Pay with NOWPayments — $10</button>
+        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $10</button>
         <div id="payProgressWrap" style="display:none;margin-top:10px;background:rgba(255,255,255,0.06);border-radius:20px;height:4px;overflow:hidden;">
           <div id="payProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#c47000,#F7931A);border-radius:20px;transition:width 0.2s ease;"></div>
         </div>
@@ -810,7 +809,6 @@
 </div>
 
 <script>
-  const RAZORPAY_BASE = "https://rzp.io/rzp/CFZpbrXw";
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytUMZjFoOOlJE04cEb4DP8nOYZ-bP8Z3AvAogoomlf0dqb9lQ6MOVzslGUzPXt1Cm3/exec";
   const API_TOKEN = "APEX_S3CR3T_T0K3N_ZIN88";
   const WEBSITE_URL = "https://zinashish88.github.io/APEXTRADE";
@@ -851,12 +849,10 @@
     }
   }
 
-  let selectedGateway = 'plisio';
-  const GATEWAY_LABELS = { plisio: '₮ Pay with Crypto — $10', nowpayments: '⬡ Pay with NOWPayments — $10' };
-  const GATEWAY_BTN_IDS = { plisio: 'cryptoBtn', nowpayments: 'nowpaymentsBtn' };
+  const GATEWAY = 'nowpayments';
+  const GATEWAY_LABEL = '₮ Pay with Crypto — $10';
 
-  async function openCryptoCheckout(gateway) {
-    selectedGateway = gateway || 'plisio';
+  async function openCryptoCheckout() {
     const email = document.getElementById('buyEmail').value.trim();
     const emailConfirm = document.getElementById('buyEmailConfirm').value.trim();
     const errEl = document.getElementById('buyEmailError');
@@ -887,9 +883,9 @@
     document.getElementById('prePayPopup').style.display = 'none';
 
     const ref = getRefCode() || 'direct';
-    const gateway = selectedGateway || 'plisio';
-    const btn = document.getElementById(GATEWAY_BTN_IDS[gateway]);
-    const resetLabel = GATEWAY_LABELS[gateway];
+    const gateway = GATEWAY;
+    const btn = document.getElementById('cryptoBtn');
+    const resetLabel = GATEWAY_LABEL;
     btn.innerHTML = '⏳ Creating payment...';
     btn.disabled = true;
 
