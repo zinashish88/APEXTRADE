@@ -501,7 +501,8 @@
           <div id="buyEmailError" style="color:#ff4444;font-size:11px;font-family:'JetBrains Mono',monospace;margin-top:6px;display:none;"></div>
         </div>
 
-        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout()" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $10</button>
+        <button class="crypto-btn" id="cryptoBtn" onclick="openCryptoCheckout('plisio')" style="background:linear-gradient(135deg,#c47000,#F7931A);border:none;box-shadow:0 8px 32px rgba(247,147,26,0.3);">₮ Pay with Crypto — $10</button>
+        <button class="crypto-btn" id="nowpaymentsBtn" onclick="openCryptoCheckout('nowpayments')" style="margin-top:10px;background:linear-gradient(135deg,#0b3d91,#1e90ff);border:none;box-shadow:0 8px 32px rgba(30,144,255,0.25);">⬡ Pay with NOWPayments — $10</button>
         <div id="payProgressWrap" style="display:none;margin-top:10px;background:rgba(255,255,255,0.06);border-radius:20px;height:4px;overflow:hidden;">
           <div id="payProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#c47000,#F7931A);border-radius:20px;transition:width 0.2s ease;"></div>
         </div>
@@ -850,7 +851,12 @@
     }
   }
 
-  async function openCryptoCheckout() {
+  let selectedGateway = 'plisio';
+  const GATEWAY_LABELS = { plisio: '₮ Pay with Crypto — $10', nowpayments: '⬡ Pay with NOWPayments — $10' };
+  const GATEWAY_BTN_IDS = { plisio: 'cryptoBtn', nowpayments: 'nowpaymentsBtn' };
+
+  async function openCryptoCheckout(gateway) {
+    selectedGateway = gateway || 'plisio';
     const email = document.getElementById('buyEmail').value.trim();
     const emailConfirm = document.getElementById('buyEmailConfirm').value.trim();
     const errEl = document.getElementById('buyEmailError');
@@ -881,7 +887,9 @@
     document.getElementById('prePayPopup').style.display = 'none';
 
     const ref = getRefCode() || 'direct';
-    const btn = document.getElementById('cryptoBtn');
+    const gateway = selectedGateway || 'plisio';
+    const btn = document.getElementById(GATEWAY_BTN_IDS[gateway]);
+    const resetLabel = GATEWAY_LABELS[gateway];
     btn.innerHTML = '⏳ Creating payment...';
     btn.disabled = true;
 
@@ -897,7 +905,7 @@
     }, 80);
 
     try {
-      const res = await fetch(SCRIPT_URL + '?action=createInvoice&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email) + '&token=' + API_TOKEN);
+      const res = await fetch(SCRIPT_URL + '?action=createInvoice&gateway=' + encodeURIComponent(gateway) + '&ref=' + encodeURIComponent(ref) + '&email=' + encodeURIComponent(email) + '&token=' + API_TOKEN);
       const data = await res.json();
       clearInterval(interval);
       bar.style.width = '100%';
@@ -906,7 +914,7 @@
         setTimeout(() => { window.location.href = data.invoice_url; }, 200);
       } else {
         alert('Error creating payment. Please try again.');
-        btn.innerHTML = '₮ Pay with Crypto — $10';
+        btn.innerHTML = resetLabel;
         btn.disabled = false;
         wrap.style.display = 'none';
         bar.style.width = '0%';
@@ -914,7 +922,7 @@
     } catch(err) {
       clearInterval(interval);
       alert('Error: ' + err.message);
-      btn.innerHTML = '₮ Pay with Crypto — $10';
+      btn.innerHTML = resetLabel;
       btn.disabled = false;
       wrap.style.display = 'none';
       bar.style.width = '0%';
